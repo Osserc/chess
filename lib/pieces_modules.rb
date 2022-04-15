@@ -14,34 +14,22 @@ end
 
 module Bishop_Limitations
 
-    def placeholder(board, moves, destination)
+    def refine_moveset_bishop(board, moves, destination)
         diagonal = direction(moves, destination)
         moves = moves[diagonal]
-        distance_up, distance_down, distance_right, distance_left = check_borders_distance(board)
+        distance_right, distance_left = check_borders_distance(board)[2, 3]
         case diagonal
-        when 0
+        when 0, 2
             moves = moves.slice(0, distance_left)
-        when 1
+        when 1, 3
             moves = moves.slice(0, distance_right)
-        when 2
-            moves = moves.slice(0, distance_left)
-        when 3
-            moves = moves.slice(0, distance_right)
+        # when 2
+        #     moves = moves.slice(0, distance_left)
+        # when 3
+        #     moves = moves.slice(0, distance_right)
         end
         moves
     end
-
-    def direction(moves, destination)
-        diagonal = 0
-        moves.each do | direction |
-            direction.each do | increments |
-                return diagonal if destination == self.position + increments
-            end
-            diagonal += 1
-        end
-        diagonal
-    end
-
 
 end
 
@@ -76,7 +64,18 @@ end
 
 module Rook_Limitations
 
-
+    def refine_moveset_rook(board, moves, destination)
+        perpendicular = direction(moves, destination)
+        moves = moves[perpendicular]
+        distance_right, distance_left = check_borders_distance(board)[2, 3]
+        case perpendicular
+        when 2
+            moves = moves.slice(0, distance_left)
+        when 3
+            moves = moves.slice(0, distance_right)
+        end
+        moves
+    end
 
 end
 
@@ -117,10 +116,13 @@ module Moves
         case self.class.name
         when "Bishop"
             moves = Array.new.concat(self.class::STANDARD_MOVESET)
-            moves = placeholder(board, moves, destination)
+            moves = refine_moveset_bishop(board, moves, destination)
         when "Knight"
             moves = Array.new.concat(self.class::STANDARD_MOVESET)
             moves = check_borders(moves)
+        when "Rook"
+            moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            moves = refine_moveset_rook(board, moves, destination)
         when "Pawn"
             moves = Array.new.concat(self.class::STANDARD_MOVESET)
             moves = check_status(moves)
@@ -150,6 +152,17 @@ module Moves
         distance_right = right_border - self.position
         distance_left = 8 - distance_right - 1
         return distance_right, distance_left
+    end
+
+    def direction(moves, destination)
+        line = 0
+        moves.each do | direction |
+            direction.each do | increments |
+                return line if destination == self.position + increments
+            end
+            line += 1
+        end
+        line
     end
 
 end

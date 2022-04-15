@@ -15,7 +15,7 @@ class Game
 
     def gameplay
         # @board.populate_board(@white, @black)
-        @board.board[27] = Bishop.new("♝", 27, "white")
+        @board.board[27] = Rook.new("♜", 27, "white")
         @board.display_board
         piece = @board.board[27]
         loop do
