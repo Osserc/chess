@@ -11,17 +11,19 @@ class Game
         @board = Board.new
         @white = Player.new("white")
         @black = Player.new("black")
+        @turn = 1
     end
 
     def gameplay
-        # @board.populate_board(@white, @black)
-        @board.board[27] = King.new("♚", 27, "white")
+        @board.populate_board(@white, @black)
+        # @board.board[27] = King.new("♚", 27, "white")
         @board.display_board
-        piece = @board.board[27]
+        # piece = @board.board[27]
         loop do
-            piece = @board.board[select_piece(@board)]
+            piece = @board.board[select_piece(@board, @turn)]
             piece.move_piece(@board, select_destination(@board))
             @board.display_board
+            @turn += 1
         end
     end
 

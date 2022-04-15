@@ -14,9 +14,9 @@ module Navigation
         converted
     end
 
-    def select_piece(board)
+    def select_piece(board, turn)
         puts "Which piece would you like to move?"
-        input_loop_start(board)
+        input_loop_piece(board, turn)
     end
 
     def select_destination(board)
@@ -24,9 +24,9 @@ module Navigation
         input_loop_destination(board)
     end
 
-    def input_loop_start(board)
+    def input_loop_piece(board, turn)
         answer = gets.chomp.upcase
-        until check_coords_input(answer) && check_piece_presence(board, answer)
+        until check_coords_input(answer) && check_piece_presence(board, answer) && check_piece_color(board, answer, turn)
             puts "Invalid coordinates.\n"
             answer = gets.chomp.upcase
         end
@@ -55,6 +55,23 @@ module Navigation
             return true
         else
             return false
+        end
+    end
+
+    def check_piece_color(board, input, turn)
+        case turn.odd?
+        when true
+            if board.board[convert_front_to_back(input)].color == "white"
+                return true
+            else
+                return false
+            end
+        else
+            if board.board[convert_front_to_back(input)].color == "black"
+                return true
+            else
+                return false
+            end
         end
     end
 
