@@ -13,8 +13,8 @@ class Game
     end
 
     def gameplay
+        @board.populate_board(@white, @black)
         @board.display_board
-
     end
 
 end

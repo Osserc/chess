@@ -24,10 +24,19 @@ class Board
         print "   | " + NUMBERS.join(" | ").to_s + " |\n"
         print "---+---+---+---+---+---+---+---+---+\n"
         until i == 8 && b == 64
-            print " " + LETTERS[i] + " | " + @board.slice(b, 8).map { | element | element.class.ancestors.include?("Piece") ? element.symbol : element }.join(" | ").to_s + " |\n"
+            print " " + LETTERS[i] + " | " + @board.slice(b, 8).map { | element | element.class.ancestors.include?(Piece) ? element.symbol : element }.join(" | ").to_s + " |\n"
             print "---+---+---+---+---+---+---+---+---+\n"
             i += 1
             b += 8
+        end
+    end
+
+    def populate_board(white, black)
+        white.pieces.each do | element |
+            @board[element.position] = element
+        end
+        black.pieces.each do | element |
+            @board[element.position] = element
         end
     end
 
