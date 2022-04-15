@@ -15,7 +15,19 @@ end
 module Bishop_Limitations
 
     def placeholder(board, moves, destination)
-        moves = moves[direction(moves, destination)]
+        diagonal = direction(moves, destination)
+        moves = moves[diagonal]
+        distance_up, distance_down, distance_right, distance_left = check_borders_distance(board)
+        case diagonal
+        when 0
+            moves = moves.slice(0, distance_left)
+        when 1
+            moves = moves.slice(0, distance_right)
+        when 2
+            moves = moves.slice(0, distance_left)
+        when 3
+            moves = moves.slice(0, distance_right)
+        end
         moves
     end
 

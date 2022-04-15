@@ -14,15 +14,15 @@ class Game
     end
 
     def gameplay
-        @board.populate_board(@white, @black)
+        # @board.populate_board(@white, @black)
         @board.board[27] = Bishop.new("♝", 27, "white")
         @board.display_board
         piece = @board.board[27]
-        # loop do
-        #     piece = @board.board[select_piece]
-        #     piece.move_piece(@board, select_destination)
-        #     @board.display_board
-        # end
+        loop do
+            piece = @board.board[select_piece]
+            piece.move_piece(@board, select_destination)
+            @board.display_board
+        end
     end
 
 end
