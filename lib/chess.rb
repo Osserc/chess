@@ -15,12 +15,12 @@ class Game
 
     def gameplay
         # @board.populate_board(@white, @black)
-        @board.board[27] = Rook.new("♜", 27, "white")
+        @board.board[27] = King.new("♚", 27, "white")
         @board.display_board
         piece = @board.board[27]
         loop do
-            piece = @board.board[select_piece]
-            piece.move_piece(@board, select_destination)
+            piece = @board.board[select_piece(@board)]
+            piece.move_piece(@board, select_destination(@board))
             @board.display_board
         end
     end

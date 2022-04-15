@@ -1,13 +1,34 @@
 module King_Limitations
 
+    UPPER_LIMITATIONS = [-9, -8, -7]
+    LEFT_LIMITATIONS = [-9, -1, 7]
+    RIGHT_LIMITATIONS = [-7, 1, 9]
+    LOWER_LIMITATIONS = [9, 8, 7]
 
-
+    def refine_moveset_king(moves)
+        moves -= UPPER_LIMITATIONS if Board::TOP_BORDER.include?(self.position) 
+        moves -= LEFT_LIMITATIONS if Board::LEFT_BORDER.include?(self.position)
+        moves -= RIGHT_LIMITATIONS if Board::RIGHT_BORDER.include?(self.position)
+        moves -= LOWER_LIMITATIONS if Board::BOTTOM_BORDER.include?(self.position)
+        moves
+    end
 
 end
 
 module Queen_Limitations
 
-
+    def refine_moveset_queen(board, moves, destination)
+        perpendicular = direction(moves, destination)
+        moves = moves[perpendicular]
+        distance_right, distance_left = check_borders_distance(board)[2, 3]
+        case perpendicular
+        when 0, 2, 6
+            moves = moves.slice(0, distance_left)
+        when 1, 3, 7
+            moves = moves.slice(0, distance_right)
+        end
+        moves
+    end
 
 
 end
@@ -23,10 +44,6 @@ module Bishop_Limitations
             moves = moves.slice(0, distance_left)
         when 1, 3
             moves = moves.slice(0, distance_right)
-        # when 2
-        #     moves = moves.slice(0, distance_left)
-        # when 3
-        #     moves = moves.slice(0, distance_right)
         end
         moves
     end
@@ -48,7 +65,7 @@ module Knight_Limitations
     LOWER_LIMITATIONS = [17, 15, 10, 6]
     LOWER__BOUND_LIMITATIONS = [17, 15]
 
-    def check_borders(moves)
+    def refine_moveset_knight(moves)
         moves -= UPPER_LIMITATIONS if Board::TOP_BORDER.include?(self.position) 
         moves -= UPPER__BOUND_LIMITATIONS if UPPER_BOUND.include?(self.position)
         moves -= LEFT_LIMITATIONS if Board::LEFT_BORDER.include?(self.position)
@@ -81,7 +98,7 @@ end
 
 module Pawn_Limitations
     
-    def check_status(moves)
+    def refine_moveset_pawn(moves)
         moves -= [-8] if self.color == "white"
         moves -= [8] if self.color == "black"
         moves
@@ -100,7 +117,7 @@ module Moves
             board.board[destination] = self
         else
             puts "Illegal move."
-            move_piece(board, select_destination)
+            move_piece(board, select_destination(board))
         end
     end
 
@@ -114,18 +131,24 @@ module Moves
 
     def define_moveset(board, destination)
         case self.class.name
+        when "King"
+            moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            moves = refine_moveset_king(moves)
+        when "Queen"
+            moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            moves = refine_moveset_queen(board, moves, destination)
         when "Bishop"
             moves = Array.new.concat(self.class::STANDARD_MOVESET)
             moves = refine_moveset_bishop(board, moves, destination)
         when "Knight"
             moves = Array.new.concat(self.class::STANDARD_MOVESET)
-            moves = check_borders(moves)
+            moves = refine_moveset_knight(moves)
         when "Rook"
             moves = Array.new.concat(self.class::STANDARD_MOVESET)
             moves = refine_moveset_rook(board, moves, destination)
         when "Pawn"
             moves = Array.new.concat(self.class::STANDARD_MOVESET)
-            moves = check_status(moves)
+            moves = refine_moveset_pawn(moves)
         end
     end
 
