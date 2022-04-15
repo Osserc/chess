@@ -14,13 +14,13 @@ module Knight_Limitations
     LOWER__BOUND_LIMITATIONS = [17, 15]
 
     def check_borders(moves)
-        moves -= UPPER_LIMITATIONS if TOP_BORDER.include?(self.position) 
+        moves -= UPPER_LIMITATIONS if Board::TOP_BORDER.include?(self.position) 
         moves -= UPPER__BOUND_LIMITATIONS if UPPER_BOUND.include?(self.position)
-        moves -= LEFT_LIMITATIONS if LEFT_BORDER.include?(self.position)
+        moves -= LEFT_LIMITATIONS if Board::LEFT_BORDER.include?(self.position)
         moves -= LEFT__BOUND_LIMITATIONS if LEFT_BOUND.include?(self.position)
-        moves -= RIGHT_LIMITATIONS if RIGHT_BORDER.include?(self.position)
+        moves -= RIGHT_LIMITATIONS if Board::RIGHT_BORDER.include?(self.position)
         moves -= RIGHT_BOUND_LIMITATIONS if RIGHT_BOUND.include?(self.position)
-        moves -= LOWER_LIMITATIONS if BOTTOM_BORDER.include?(self.position)
+        moves -= LOWER_LIMITATIONS if Board::BOTTOM_BORDER.include?(self.position)
         moves -= LOWER__BOUND_LIMITATIONS if LOWER_BOUND.include?(self.position)
         moves
     end
