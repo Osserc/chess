@@ -24,9 +24,19 @@ module Navigation
         input_loop_destination(board)
     end
 
+    # def input_loop_piece(board, turn)
+    #     answer = gets.chomp.upcase
+    #     until check_coords_input(answer) && check_piece_presence(board, answer) && check_piece_color(board, answer, turn)
+    #         puts "Invalid coordinates.\n"
+    #         answer = gets.chomp.upcase
+    #     end
+    #     convert_front_to_back(answer)
+    # end
+
+    # color-blind variant for testing
     def input_loop_piece(board, turn)
         answer = gets.chomp.upcase
-        until check_coords_input(answer) && check_piece_presence(board, answer) && check_piece_color(board, answer, turn)
+        until check_coords_input(answer) && check_piece_presence(board, answer)
             puts "Invalid coordinates.\n"
             answer = gets.chomp.upcase
         end

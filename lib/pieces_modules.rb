@@ -18,16 +18,14 @@ end
 module Queen_Limitations
 
     def refine_moveset_queen(board, moves, destination)
-        perpendicular = direction(moves, destination)
-        moves = moves[perpendicular]
-        distance_right, distance_left = check_borders_distance(board)[2, 3]
-        case perpendicular
-        when 0, 2, 6
-            moves = moves.slice(0, distance_left)
-        when 1, 3, 7
-            moves = moves.slice(0, distance_right)
-        end
-        moves
+        distance_right, distance_left = check_horizontal_distance(board)
+        moves[0] = moves[0].slice(0, distance_left)
+        moves[2] = moves[2].slice(0, distance_left)
+        moves[6] = moves[6].slice(0, distance_left)
+        moves[1] = moves[1].slice(0, distance_right)
+        moves[3] = moves[3].slice(0, distance_right)
+        moves[7] = moves[7].slice(0, distance_right)
+        moves.flatten
     end
 
 
@@ -36,16 +34,12 @@ end
 module Bishop_Limitations
 
     def refine_moveset_bishop(board, moves, destination)
-        diagonal = direction(moves, destination)
-        moves = moves[diagonal]
-        distance_right, distance_left = check_borders_distance(board)[2, 3]
-        case diagonal
-        when 0, 2
-            moves = moves.slice(0, distance_left)
-        when 1, 3
-            moves = moves.slice(0, distance_right)
-        end
-        moves
+        distance_right, distance_left = check_horizontal_distance(board)
+        moves[0] = moves[0].slice(0, distance_left)
+        moves[2] = moves[2].slice(0, distance_left)
+        moves[1] = moves[1].slice(0, distance_right)
+        moves[3] = moves[3].slice(0, distance_right)
+        moves.flatten
     end
 
 end
@@ -82,16 +76,10 @@ end
 module Rook_Limitations
 
     def refine_moveset_rook(board, moves, destination)
-        perpendicular = direction(moves, destination)
-        moves = moves[perpendicular]
-        distance_right, distance_left = check_borders_distance(board)[2, 3]
-        case perpendicular
-        when 2
-            moves = moves.slice(0, distance_left)
-        when 3
-            moves = moves.slice(0, distance_right)
-        end
-        moves
+        distance_right, distance_left = check_horizontal_distance(board)
+        moves[2] = moves[2].slice(0, distance_left)
+        moves[3] = moves[3].slice(0, distance_right)
+        moves.flatten
     end
 
 end
@@ -152,40 +140,11 @@ module Moves
         end
     end
 
-    def check_borders_distance(board)
-        distance_up, distance_down = vertical_distance(board)
-        distance_right, distance_left = horizontal_distance(board)
-        return distance_up, distance_down, distance_right, distance_left
-    end
-
-    def vertical_distance(board)
-        dummy = Integer(self.position)
-        jumps = 0
-        until Board::TOP_BORDER.include?(dummy) do
-            dummy -= 8
-            jumps += 1
-        end
-        distance_up = jumps
-        distance_down = 8 - jumps - 1
-        return distance_up, distance_down
-    end
-
-    def horizontal_distance(board)
+    def check_horizontal_distance(board)
         right_border = Board::RIGHT_BORDER[Board::RIGHT_BORDER.index { | element | element >= self.position }]
         distance_right = right_border - self.position
         distance_left = 8 - distance_right - 1
         return distance_right, distance_left
-    end
-
-    def direction(moves, destination)
-        line = 0
-        moves.each do | direction |
-            direction.each do | increments |
-                return line if destination == self.position + increments
-            end
-            line += 1
-        end
-        line
     end
 
 end
