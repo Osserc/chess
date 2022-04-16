@@ -16,7 +16,9 @@ class Game
 
     def gameplay
         # @board.populate_board(@white, @black)
-        @board.board[27] = Queen.new("R", 27, "white")
+        @board.board[27] = Queen.new("Q", 27, "white")
+        @board.board[11] = Rook.new("R", 11, "white")
+        @board.board[20] = Pawn.new("P", 20, "black")
         @board.display_board
         piece = @board.board[27]
         loop do

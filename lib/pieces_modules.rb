@@ -25,6 +25,7 @@ module Queen_Limitations
         moves[1] = moves[1].slice(0, distance_right)
         moves[3] = moves[3].slice(0, distance_right)
         moves[7] = moves[7].slice(0, distance_right)
+        moves = check_path(board, moves, destination)
         moves.flatten
     end
 
@@ -39,6 +40,7 @@ module Bishop_Limitations
         moves[2] = moves[2].slice(0, distance_left)
         moves[1] = moves[1].slice(0, distance_right)
         moves[3] = moves[3].slice(0, distance_right)
+        moves = check_path(board, moves, destination)
         moves.flatten
     end
 
@@ -79,6 +81,7 @@ module Rook_Limitations
         distance_right, distance_left = check_horizontal_distance(board)
         moves[2] = moves[2].slice(0, distance_left)
         moves[3] = moves[3].slice(0, distance_right)
+        moves = check_path(board, moves, destination)
         moves.flatten
     end
 
@@ -110,6 +113,9 @@ module Moves
     end
 
     def check_legality(board, destination)
+        if board.board[destination].class.ancestors.include?(Piece)
+            return false if board.board[destination].color == @color
+        end
         moves = define_moveset(board, destination)
         differential = destination - @position
         return false if moves.nil?
@@ -145,6 +151,18 @@ module Moves
         distance_right = right_border - self.position
         distance_left = 8 - distance_right - 1
         return distance_right, distance_left
+    end
+
+    def check_path(board, moves, destination)
+        moves = moves.map do | element |
+            clear_spaces = 0
+            element.each do | single_move |
+                clear_spaces += 1
+                break if board.board[@position + single_move].class.ancestors.include?(Piece)
+            end
+            element = element.slice(0, clear_spaces)
+        end
+        moves
     end
 
 end
