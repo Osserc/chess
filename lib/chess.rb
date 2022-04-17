@@ -13,7 +13,7 @@ class Game
     end
 
     def gameplay
-        @table.board[11] = Knight.new("N", 11, "white", @table.board)
+        @table.board[11] = Pawn.new("P", 11, "white", @table.board, @table.move_history)
         @table.board[1] = Knight.new("N", 1, "white", @table.board)
         @table.board[26] = Knight.new("N", 26, "black", @table.board)
         @table.display_board

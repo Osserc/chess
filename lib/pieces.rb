@@ -1,7 +1,7 @@
 require_relative "pieces_modules"
 
 class Piece
-    attr_accessor :position, :board, :moves
+    attr_accessor :position, :board, :moves, :displaced
     attr_reader :symbol, :color
 
     include Moves, Navigation

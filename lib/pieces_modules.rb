@@ -83,9 +83,9 @@ end
 module Pawn_Limitations
 
     WHITE_MOVES = [-16, -9, -8, -7]
-    BLACK_MOVES = [7, 8, 9, 16]]
+    BLACK_MOVES = [7, 8, 9, 16]
     
-    def refine_moveset_pawn(moves)
+    def refine_moveset_pawn
         check_friendly
         pawn_color_check
         pawn_double_step
@@ -99,8 +99,8 @@ module Pawn_Limitations
     end
 
     def pawn_double_step
-        self.moves -= [16] if self.color == "white" && self.displace != 0
-        self.moves -= [-16] if self.color == "black" && self.displace != 0
+        self.moves -= [16] if self.color == "white" && self.displaced != 0
+        self.moves -= [-16] if self.color == "black" && self.displaced != 0
     end
 
     def pawn_obstruction

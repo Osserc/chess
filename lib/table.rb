@@ -1,7 +1,8 @@
 require_relative "modules"
+require_relative "history"
 
 class Table
-    attr_accessor :board
+    attr_accessor :board, :white, :black, :move_history
 
     include Navigation
 
@@ -17,7 +18,7 @@ class Table
         @black = Array.new
         # prepare_pieces
         # populate_board
-        @move_history = nil
+        @move_history = MoveHistory.new
     end
 
     def make_board
@@ -55,14 +56,14 @@ class Table
         @white << Knight.new("♞", 6, "white", @board)
         @white << Rook.new("♜", 0, "white", @board)
         @white << Rook.new("♜", 7, "white", @board)
-        @white << Pawn.new("♟", 8, "white", @board)
-        @white << Pawn.new("♟", 9, "white", @board)
-        @white << Pawn.new("♟", 10, "white", @board)
-        @white << Pawn.new("♟", 11, "white", @board)
-        @white << Pawn.new("♟", 12, "white", @board)
-        @white << Pawn.new("♟", 13, "white", @board)
-        @white << Pawn.new("♟", 14, "white", @board)
-        @white << Pawn.new("♟", 15, "white", @board)
+        @white << Pawn.new("♟", 8, "white", @board, @move_history)
+        @white << Pawn.new("♟", 9, "white", @board, @move_history)
+        @white << Pawn.new("♟", 10, "white", @board, @move_history)
+        @white << Pawn.new("♟", 11, "white", @board, @move_history)
+        @white << Pawn.new("♟", 12, "white", @board, @move_history)
+        @white << Pawn.new("♟", 13, "white", @board, @move_history)
+        @white << Pawn.new("♟", 14, "white", @board, @move_history)
+        @white << Pawn.new("♟", 15, "white", @board, @move_history)
 
         @black << King.new("♔", 60, "black", @board)
         @black << Queen.new("♕", 59, "black", @board)
@@ -72,14 +73,14 @@ class Table
         @black << Knight.new("♘", 62, "black", @board)
         @black << Rook.new("♖", 56, "black", @board)
         @black << Rook.new("♖", 63, "black", @board)
-        @black << Pawn.new("♙", 48, "black", @board)
-        @black << Pawn.new("♙", 49, "black", @board)
-        @black << Pawn.new("♙", 50, "black", @board)
-        @black << Pawn.new("♙", 51, "black", @board)
-        @black << Pawn.new("♙", 52, "black", @board)
-        @black << Pawn.new("♙", 53, "black", @board)
-        @black << Pawn.new("♙", 54, "black", @board)
-        @black << Pawn.new("♙", 55, "black", @board)
+        @black << Pawn.new("♙", 48, "black", @board, @move_history)
+        @black << Pawn.new("♙", 49, "black", @board, @move_history)
+        @black << Pawn.new("♙", 50, "black", @board, @move_history)
+        @black << Pawn.new("♙", 51, "black", @board, @move_history)
+        @black << Pawn.new("♙", 52, "black", @board, @move_history)
+        @black << Pawn.new("♙", 53, "black", @board, @move_history)
+        @black << Pawn.new("♙", 54, "black", @board, @move_history)
+        @black << Pawn.new("♙", 55, "black", @board, @move_history)
     end
 
 end
