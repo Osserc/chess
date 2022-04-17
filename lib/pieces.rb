@@ -11,6 +11,7 @@ class Piece
         @position = position
         @color = color
         @board = board
+        @displaced = 0
         @moves = Array.new
     end
 end
@@ -51,7 +52,7 @@ end
 class Pawn < Piece
     attr_accessor :move_history
 
-    STANDARD_MOVESET = [-8, 8]
+    STANDARD_MOVESET = [-16, -9, -8, -7, 7, 8, 9, 16]
 
     def initialize(symbol, position, color, board, move_history = nil)
         super(symbol, position, color, board)

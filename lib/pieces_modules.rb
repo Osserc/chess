@@ -40,30 +40,34 @@ end
 
 module Knight_Limitations
 
-    # UPPER_BOUND = (9..14).to_a
-    # UPPER_LIMITATIONS = [-17, -15, -10, -6]
-    # UPPER__BOUND_LIMITATIONS = [-17, -15]
-    # LEFT_BOUND = [9, 17, 25, 33, 41, 49]
-    # LEFT_LIMITATIONS = [-17, -10, 6, 15]
-    # LEFT__BOUND_LIMITATIONS = [-10, 6]
-    # RIGHT_BOUND = [14, 22, 30, 38, 46, 54]
-    # RIGHT_LIMITATIONS = [-15, -6, 10, 17]
-    # RIGHT_BOUND_LIMITATIONS = [-6, 10]
-    # LOWER_BOUND = (49..54).to_a
-    # LOWER_LIMITATIONS = [17, 15, 10, 6]
-    # LOWER__BOUND_LIMITATIONS = [17, 15]
+    UPPER_BOUND = (9..14).to_a
+    UPPER_LIMITATIONS = [-17, -15, -10, -6]
+    UPPER__BOUND_LIMITATIONS = [-17, -15]
+    LEFT_BOUND = [9, 17, 25, 33, 41, 49]
+    LEFT_LIMITATIONS = [-17, -10, 6, 15]
+    LEFT__BOUND_LIMITATIONS = [-10, 6]
+    RIGHT_BOUND = [14, 22, 30, 38, 46, 54]
+    RIGHT_LIMITATIONS = [-15, -6, 10, 17]
+    RIGHT_BOUND_LIMITATIONS = [-6, 10]
+    LOWER_BOUND = (49..54).to_a
+    LOWER_LIMITATIONS = [17, 15, 10, 6]
+    LOWER__BOUND_LIMITATIONS = [17, 15]
 
-    # def refine_moveset_knight(moves)
-    #     moves -= UPPER_LIMITATIONS if Board::TOP_BORDER.include?(self.position) 
-    #     moves -= UPPER__BOUND_LIMITATIONS if UPPER_BOUND.include?(self.position)
-    #     moves -= LEFT_LIMITATIONS if Board::LEFT_BORDER.include?(self.position)
-    #     moves -= LEFT__BOUND_LIMITATIONS if LEFT_BOUND.include?(self.position)
-    #     moves -= RIGHT_LIMITATIONS if Board::RIGHT_BORDER.include?(self.position)
-    #     moves -= RIGHT_BOUND_LIMITATIONS if RIGHT_BOUND.include?(self.position)
-    #     moves -= LOWER_LIMITATIONS if Board::BOTTOM_BORDER.include?(self.position)
-    #     moves -= LOWER__BOUND_LIMITATIONS if LOWER_BOUND.include?(self.position)
-    #     moves
-    # end
+    def refine_moveset_knight
+        check_friendly
+        knight_borders
+    end
+
+    def knight_borders
+        self.moves -= UPPER_LIMITATIONS if Table::TOP_BORDER.include?(self.position) 
+        self.moves -= UPPER__BOUND_LIMITATIONS if UPPER_BOUND.include?(self.position)
+        self.moves -= LEFT_LIMITATIONS if Table::LEFT_BORDER.include?(self.position)
+        self.moves -= LEFT__BOUND_LIMITATIONS if LEFT_BOUND.include?(self.position)
+        self.moves -= RIGHT_LIMITATIONS if Table::RIGHT_BORDER.include?(self.position)
+        self.moves -= RIGHT_BOUND_LIMITATIONS if RIGHT_BOUND.include?(self.position)
+        self.moves -= LOWER_LIMITATIONS if Table::BOTTOM_BORDER.include?(self.position)
+        self.moves -= LOWER__BOUND_LIMITATIONS if LOWER_BOUND.include?(self.position)
+    end
 
 end
 
@@ -74,23 +78,44 @@ module Rook_Limitations
         build_directions
     end
 
-    # def refine_moveset_rook(board, moves, destination)
-    #     distance_right, distance_left = check_horizontal_distance(board)
-    #     moves[2] = moves[2].slice(0, distance_left)
-    #     moves[3] = moves[3].slice(0, distance_right)
-    #     moves = check_path(board, moves, destination)
-    #     moves.flatten
-    # end
-
 end
 
 module Pawn_Limitations
+
+    WHITE_MOVES = [-16, -9, -8, -7]
+    BLACK_MOVES = [7, 8, 9, 16]]
     
-    # def refine_moveset_pawn(moves)
-    #     moves -= [-8] if self.color == "white"
-    #     moves -= [8] if self.color == "black"
-    #     moves
-    # end
+    def refine_moveset_pawn(moves)
+        check_friendly
+        pawn_color_check
+        pawn_double_step
+        pawn_obstruction
+        pawn_eating
+    end
+
+    def pawn_color_check
+        self.moves -= BLACK_MOVES if self.color == "black"
+        self.moves -= WHITE_MOVES if self.color == "white"
+    end
+
+    def pawn_double_step
+        self.moves -= [16] if self.color == "white" && self.displace != 0
+        self.moves -= [-16] if self.color == "black" && self.displace != 0
+    end
+
+    def pawn_obstruction
+        self.moves -= [16] if self.board[self.position + 16] != " "
+        self.moves -= [8] if self.board[self.position + 8] != " "
+        self.moves -= [-16] if self.board[self.position - 16] != " "
+        self.moves -= [-8] if self.board[self.position - 8] != " "
+    end
+
+    def pawn_eating
+        self.moves -= [7] if self.board[self.position + 7] == " "
+        self.moves -= [9] if self.board[self.position + 9] == " "
+        self.moves -= [-7] if self.board[self.position - 7] == " "
+        self.moves -= [-9] if self.board[self.position - 9] == " "
+    end
 
 end
 

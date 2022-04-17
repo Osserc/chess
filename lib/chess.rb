@@ -13,11 +13,9 @@ class Game
     end
 
     def gameplay
-        @table.board[11] = Queen.new("R", 11, "white", @table.board)
-        @table.board[2] = Queen.new("W", 2, "white", @table.board)
-        @table.board[19] = Queen.new("B", 19, "black", @table.board)
-        @table.board[25] = Queen.new("B", 25, "black", @table.board)
-        @table.board[29] = Queen.new("W", 29, "white", @table.board)
+        @table.board[11] = Knight.new("N", 11, "white", @table.board)
+        @table.board[1] = Knight.new("N", 1, "white", @table.board)
+        @table.board[26] = Knight.new("N", 26, "black", @table.board)
         @table.display_board
         # pawn = @table.board[8]
         rook = @table.board[11]
