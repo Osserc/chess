@@ -11,42 +11,30 @@ module King_Limitations
     end
 
     def king_borders
-        @moves -= UPPER_LIMITATIONS if Table::TOP_BORDER.include?(self.position) 
-        @moves -= LEFT_LIMITATIONS if Table::LEFT_BORDER.include?(self.position)
-        @moves -= RIGHT_LIMITATIONS if Table::RIGHT_BORDER.include?(self.position)
-        @moves -= LOWER_LIMITATIONS if Table::BOTTOM_BORDER.include?(self.position)
+        self.moves -= UPPER_LIMITATIONS if Table::TOP_BORDER.include?(self.position) 
+        self.moves -= LEFT_LIMITATIONS if Table::LEFT_BORDER.include?(self.position)
+        self.moves -= RIGHT_LIMITATIONS if Table::RIGHT_BORDER.include?(self.position)
+        self.moves -= LOWER_LIMITATIONS if Table::BOTTOM_BORDER.include?(self.position)
     end
 
 end
 
 module Queen_Limitations
 
-    # def refine_moveset_queen(board, moves, destination)
-    #     distance_right, distance_left = check_horizontal_distance(board)
-    #     moves[0] = moves[0].slice(0, distance_left)
-    #     moves[2] = moves[2].slice(0, distance_left)
-    #     moves[6] = moves[6].slice(0, distance_left)
-    #     moves[1] = moves[1].slice(0, distance_right)
-    #     moves[3] = moves[3].slice(0, distance_right)
-    #     moves[7] = moves[7].slice(0, distance_right)
-    #     moves = check_path(board, moves, destination)
-    #     moves.flatten
-    # end
+    def refine_moveset_queen
+        self.moves.each { | direction | check_friendly(direction) }
+        build_directions
+    end
 
 
 end
 
 module Bishop_Limitations
 
-    # def refine_moveset_bishop(board, moves, destination)
-    #     distance_right, distance_left = check_horizontal_distance(board)
-    #     moves[0] = moves[0].slice(0, distance_left)
-    #     moves[2] = moves[2].slice(0, distance_left)
-    #     moves[1] = moves[1].slice(0, distance_right)
-    #     moves[3] = moves[3].slice(0, distance_right)
-    #     moves = check_path(board, moves, destination)
-    #     moves.flatten
-    # end
+    def refine_moveset_bishop
+        self.moves.each { | direction | check_friendly(direction) }
+        build_directions
+    end
 
 end
 
@@ -81,6 +69,11 @@ end
 
 module Rook_Limitations
 
+    def refine_moveset_rook
+        self.moves.each { | direction | check_friendly(direction) }
+        build_directions
+    end
+
     # def refine_moveset_rook(board, moves, destination)
     #     distance_right, distance_left = check_horizontal_distance(board)
     #     moves[2] = moves[2].slice(0, distance_left)
@@ -108,44 +101,54 @@ module Moves
     def define_moveset
         case self.class.name
         when "King"
-            @moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            self.moves = Array.new.concat(self.class::STANDARD_MOVESET)
             refine_moveset_king
         when "Queen"
-            @moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            self.moves = Array.new.concat(self.class::STANDARD_MOVESET)
             refine_moveset_queen
         when "Bishop"
-            @moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            self.moves = Array.new.concat(self.class::STANDARD_MOVESET)
             refine_moveset_bishop
         when "Knight"
-            @moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            self.moves = Array.new.concat(self.class::STANDARD_MOVESET)
             refine_moveset_knight
         when "Rook"
-            @moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            self.moves = Array.new.concat(self.class::STANDARD_MOVESET)
             refine_moveset_rook
         when "Pawn"
-            @moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            self.moves = Array.new.concat(self.class::STANDARD_MOVESET)
             refine_moveset_pawn
         end
     end
 
-    def check_friendly
-        @moves.map! do | single_move |
-            single_move = nil if @board[@position + single_move].color == self.color
+    def check_friendly(moves = self.moves)
+        moves.map! do | single_move |
+            if self.board[self.position + single_move].class.ancestors.include?(Piece)
+                single_move = nil if self.board[self.position + single_move].color == self.color
+            end
+            single_move
         end
-        @moves.compact!
+        moves.compact!
     end
 
-    # def check_path
-    #     moves = moves.map do | element |
-    #         clear_spaces = 0
-    #         element.each do | single_move |
-    #             clear_spaces += 1
-    #             break if board.board[@position + single_move].class.ancestors.include?(Piece)
-    #         end
-    #         element = element.slice(0, clear_spaces)
-    #     end
-    #     moves
-    # end
+    def build_directions
+        self.moves.each do | direction |
+            unless direction.empty?
+                until Table::ALL_BORDERS.include?(self.position + direction.last) do
+                    if self.board[self.position + direction.last].class.ancestors.include?(Piece)
+                        if self.board[self.position + direction.last].color != self.color
+                            break
+                        elsif self.board[self.position + direction.last].color == self.color
+                            direction.pop
+                            break
+                        end
+                    else
+                        direction << direction.last + direction.first
+                    end
+                end
+            end
+        end
+    end
 
 end
 

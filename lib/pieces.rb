@@ -17,21 +17,21 @@ end
 
 class King < Piece
 
-    STANDARD_MOVESET = [-19, -8, -7, 1, 9, 8, 7, -1]
+    STANDARD_MOVESET = [-9, -8, -7, 1, 9, 8, 7, -1]
 
 end
 
 class Queen < Piece
 
     # in order: up left, up right, down left, down right, up, down, left, right
-    STANDARD_MOVESET = [[-9, -18, -27, -36, -45, -54, -63], [-7, -14, -21, -28, -35, -42, -49], [7, 14, 21, 28, 35, 42, 49], [9, 18, 27, 36, 45, 54, 63], [-8, -16, -24, -32, -40, -48, -56], [8, 16, 24, 32, 40, 48, 56], [-1, -2, -3, -4, -5, -6, -7], [1, 2, 3, 4, 5, 6, 7]]
+    STANDARD_MOVESET = [[-9], [-7], [7], [9], [-8], [8], [-1], [1]]
 
 end
 
 class Bishop < Piece
 
     # in order: up left, up right, down left, down right
-    STANDARD_MOVESET = [[-9, -18, -27, -36, -45, -54, -63], [-7, -14, -21, -28, -35, -42, -49], [7, 14, 21, 28, 35, 42, 49], [9, 18, 27, 36, 45, 54, 63]]
+    STANDARD_MOVESET = [[-9], [-7], [7], [9]]
 
 end
 
@@ -44,7 +44,7 @@ end
 class Rook < Piece
 
     # in order: up, down, left, right
-    STANDARD_MOVESET = [[-8, -16, -24, -32, -40, -48, -56], [8, 16, 24, 32, 40, 48, 56], [-1, -2, -3, -4, -5, -6, -7], [1, 2, 3, 4, 5, 6, 7]]
+    STANDARD_MOVESET = [[-8], [8], [-1], [1]]
 
 end
 

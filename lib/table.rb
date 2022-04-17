@@ -9,13 +9,14 @@ class Table
     LEFT_BORDER = [0, 8, 16, 24, 32, 40, 48, 56]
     RIGHT_BORDER = [7, 15, 23, 31, 39, 47, 55, 63]
     BOTTOM_BORDER = (56..63).to_a
+    ALL_BORDERS = TOP_BORDER.concat(LEFT_BORDER).concat(RIGHT_BORDER).concat(BOTTOM_BORDER).uniq
 
     def initialize
         @board = make_board
         @white = Array.new
         @black = Array.new
-        prepare_pieces
-        populate_board
+        # prepare_pieces
+        # populate_board
         @move_history = nil
     end
 
