@@ -1,4 +1,4 @@
-require_relative "board"
+require_relative "table"
 require_relative "pieces"
 require_relative "pieces_modules"
 require_relative "modules"
@@ -16,6 +16,7 @@ class Game
         pawn = @table.board[8]
         rook = @table.board[0]
         queen = @table.board[3]
+        king = @table.board[4]
         puts "STOP"
     end
 

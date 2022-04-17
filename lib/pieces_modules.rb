@@ -1,17 +1,21 @@
 module King_Limitations
 
-    # UPPER_LIMITATIONS = [-9, -8, -7]
-    # LEFT_LIMITATIONS = [-9, -1, 7]
-    # RIGHT_LIMITATIONS = [-7, 1, 9]
-    # LOWER_LIMITATIONS = [9, 8, 7]
+    UPPER_LIMITATIONS = [-9, -8, -7]
+    LEFT_LIMITATIONS = [-9, -1, 7]
+    RIGHT_LIMITATIONS = [-7, 1, 9]
+    LOWER_LIMITATIONS = [9, 8, 7]
 
-    # def refine_moveset_king(moves)
-    #     moves -= UPPER_LIMITATIONS if Board::TOP_BORDER.include?(self.position) 
-    #     moves -= LEFT_LIMITATIONS if Board::LEFT_BORDER.include?(self.position)
-    #     moves -= RIGHT_LIMITATIONS if Board::RIGHT_BORDER.include?(self.position)
-    #     moves -= LOWER_LIMITATIONS if Board::BOTTOM_BORDER.include?(self.position)
-    #     moves
-    # end
+    def refine_moveset_king
+        king_borders
+        check_friendly
+    end
+
+    def king_borders
+        @moves -= UPPER_LIMITATIONS if Table::TOP_BORDER.include?(self.position) 
+        @moves -= LEFT_LIMITATIONS if Table::LEFT_BORDER.include?(self.position)
+        @moves -= RIGHT_LIMITATIONS if Table::RIGHT_BORDER.include?(self.position)
+        @moves -= LOWER_LIMITATIONS if Table::BOTTOM_BORDER.include?(self.position)
+    end
 
 end
 
@@ -101,6 +105,48 @@ module Moves
 
     include Navigation, King_Limitations, Queen_Limitations, Bishop_Limitations, Knight_Limitations, Rook_Limitations, Pawn_Limitations
 
+    def define_moveset
+        case self.class.name
+        when "King"
+            @moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            refine_moveset_king
+        when "Queen"
+            @moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            refine_moveset_queen
+        when "Bishop"
+            @moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            refine_moveset_bishop
+        when "Knight"
+            @moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            refine_moveset_knight
+        when "Rook"
+            @moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            refine_moveset_rook
+        when "Pawn"
+            @moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            refine_moveset_pawn
+        end
+    end
+
+    def check_friendly
+        @moves.map! do | single_move |
+            single_move = nil if @board[@position + single_move].color == self.color
+        end
+        @moves.compact!
+    end
+
+    # def check_path
+    #     moves = moves.map do | element |
+    #         clear_spaces = 0
+    #         element.each do | single_move |
+    #             clear_spaces += 1
+    #             break if board.board[@position + single_move].class.ancestors.include?(Piece)
+    #         end
+    #         element = element.slice(0, clear_spaces)
+    #     end
+    #     moves
+    # end
+
 end
 
     # def move_piece(board, destination)
@@ -125,29 +171,6 @@ end
     #     return false
     # end
 
-    # def define_moveset(board, destination)
-    #     case self.class.name
-    #     when "King"
-    #         moves = Array.new.concat(self.class::STANDARD_MOVESET)
-    #         moves = refine_moveset_king(moves)
-    #     when "Queen"
-    #         moves = Array.new.concat(self.class::STANDARD_MOVESET)
-    #         moves = refine_moveset_queen(board, moves, destination)
-    #     when "Bishop"
-    #         moves = Array.new.concat(self.class::STANDARD_MOVESET)
-    #         moves = refine_moveset_bishop(board, moves, destination)
-    #     when "Knight"
-    #         moves = Array.new.concat(self.class::STANDARD_MOVESET)
-    #         moves = refine_moveset_knight(moves)
-    #     when "Rook"
-    #         moves = Array.new.concat(self.class::STANDARD_MOVESET)
-    #         moves = refine_moveset_rook(board, moves, destination)
-    #     when "Pawn"
-    #         moves = Array.new.concat(self.class::STANDARD_MOVESET)
-    #         moves = refine_moveset_pawn(moves)
-    #     end
-    # end
-
     # def check_horizontal_distance(board)
     #     right_border = Board::RIGHT_BORDER[Board::RIGHT_BORDER.index { | element | element >= self.position }]
     #     distance_right = right_border - self.position
@@ -165,16 +188,4 @@ end
     #     distance_up = jumps
     #     distance_down = 8 - distance_up - 1
     #     return distance_up, distance_down
-    # end
-
-    # def check_path(board, moves, destination)
-    #     moves = moves.map do | element |
-    #         clear_spaces = 0
-    #         element.each do | single_move |
-    #             clear_spaces += 1
-    #             break if board.board[@position + single_move].class.ancestors.include?(Piece)
-    #         end
-    #         element = element.slice(0, clear_spaces)
-    #     end
-    #     moves
     # end
