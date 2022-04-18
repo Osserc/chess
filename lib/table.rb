@@ -83,11 +83,16 @@ class Table
         @black << Pawn.new("♙", 55, "black", @board, @move_history)
     end
 
-    # def collect_pieces
-    #     @white.clear
-    #     @black.clear
-    #     @board.each
-    # end
+    def collect_pieces
+        @white.clear
+        @black.clear
+        @board.each do | square |
+            if square.class.ancestors.include?(Piece)
+                @white << square if square.color == "white"
+                @black << square if square.color == "black"
+            end
+        end
+    end
 
     def revert_move
         move = @move_history.find_last

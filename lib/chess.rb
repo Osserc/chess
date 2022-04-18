@@ -24,15 +24,7 @@ class Game
         bishop = @table.board[25]
         queen = @table.board[30]
         pawn = @table.board[10]
-        queen.define_moveset
-        queen.move_piece(28)
-        @table.display_board
-        queen.move_piece(27)
-        @table.display_board
-        queen.move_piece(25)
-        @table.display_board
-        @table.revert_move
-        @table.display_board
+        @table.collect_pieces
         puts "STOP"
     end
 
