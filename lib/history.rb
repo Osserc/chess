@@ -8,12 +8,28 @@ class MoveHistory
 
     def append(value)
         node = Node.new(value)
-        if @tail.nil?
+        if @head.value.nil?
+            @head = node
+            @head.next_node = @tail
+        elsif @tail.value.nil?
             @tail = node
+            @head.next_node = @tail
         else
             @tail.next_node = node
             @tail = node
         end
+    end
+
+    def pop
+        explorer = @head
+        counter = 1
+        size = self.size - 1
+        until counter == size do
+            explorer = explorer.next_node
+            counter += 1
+        end
+        explorer.next_node = nil
+        @tail = explorer
     end
 
     def find_last

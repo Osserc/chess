@@ -126,22 +126,22 @@ module Moves
     def define_moveset
         case self.class.name
         when "King"
-            self.moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            self.moves = self.class::STANDARD_MOVESET.dup
             refine_moveset_king
         when "Queen"
-            self.moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            self.moves = self.class::STANDARD_MOVESET.map { | direction | direction.dup}
             refine_moveset_queen
         when "Bishop"
-            self.moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            self.moves = self.class::STANDARD_MOVESET.map { | direction | direction.dup}
             refine_moveset_bishop
         when "Knight"
-            self.moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            self.moves = self.class::STANDARD_MOVESET.dup
             refine_moveset_knight
         when "Rook"
-            self.moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            self.moves = self.class::STANDARD_MOVESET.map { | direction | direction.dup}
             refine_moveset_rook
         when "Pawn"
-            self.moves = Array.new.concat(self.class::STANDARD_MOVESET)
+            self.moves = self.class::STANDARD_MOVESET.dup
             refine_moveset_pawn
         end
     end
@@ -174,6 +174,29 @@ module Moves
             end
         end
     end
+
+    def move_piece(destination)
+        return if !self.moves.flatten.include?(destination - self.position)
+        logging_move(destination)
+        self.board[self.position] = " "
+        self.position = destination
+        self.board[destination] = self
+    end
+
+    def logging_move(destination)
+        # moved_piece = self
+        # distance_traveled = destination - self.position
+        # eaten_piece = self.board[destination] if self.board[destination] != " "
+        # eaten_piece = nil if self.board[destination] == " "
+        move = {
+            :moved_piece => self,
+            :distance_traveled => destination - self.position,
+        }
+        self.board[destination] == " " ? move[:eaten_piece] = nil : move[:eaten_piece] = self.board[destination]
+        self.move_history.append(move)
+    end
+
+
 
 end
 

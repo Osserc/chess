@@ -13,19 +13,26 @@ class Game
     end
 
     def gameplay
-        @table.board[11] = Pawn.new("P", 11, "white", @table.board, @table.move_history)
-        @table.board[1] = Knight.new("N", 1, "white", @table.board)
-        @table.board[26] = Knight.new("N", 26, "black", @table.board)
+        @table.board[11] = Rook.new("R", 11, "white", @table.board, @table.move_history)
+        @table.board[25] = Bishop.new("B", 25, "black", @table.board, @table.move_history)
+        @table.board[30] = Queen.new("Q", 30, "white", @table.board, @table.move_history)
+        @table.board[10] = Pawn.new("P", 10, "black", @table.board, @table.move_history)
+        @table.board[31] = Queen.new("Q", 31, "white", @table.board, @table.move_history)
         @table.display_board
         # pawn = @table.board[8]
         rook = @table.board[11]
-        # queen = @table.board[3]
-        # king = @table.board[4]
-        rook.define_moveset
+        bishop = @table.board[25]
+        queen = @table.board[30]
+        pawn = @table.board[10]
+        pawn.define_moveset
         puts "STOP"
     end
 
 end
+
+# Make the move in question
+# Test if the player who made the move is in check
+# revert the move
 
 Game.new.gameplay
 

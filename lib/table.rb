@@ -48,14 +48,14 @@ class Table
     end
 
     def prepare_pieces
-        @white << King.new("♚", 4, "white", @board)
-        @white << Queen.new("♛", 3, "white", @board)
-        @white << Bishop.new("♝", 2, "white", @board)
-        @white << Bishop.new("♝", 5, "white", @board)
-        @white << Knight.new("♞", 1, "white", @board)
-        @white << Knight.new("♞", 6, "white", @board)
-        @white << Rook.new("♜", 0, "white", @board)
-        @white << Rook.new("♜", 7, "white", @board)
+        @white << King.new("♚", 4, "white", @board, @move_history)
+        @white << Queen.new("♛", 3, "white", @board, @move_history)
+        @white << Bishop.new("♝", 2, "white", @board, @move_history)
+        @white << Bishop.new("♝", 5, "white", @board, @move_history)
+        @white << Knight.new("♞", 1, "white", @board, @move_history)
+        @white << Knight.new("♞", 6, "white", @board, @move_history)
+        @white << Rook.new("♜", 0, "white", @board, @move_history)
+        @white << Rook.new("♜", 7, "white", @board, @move_history)
         @white << Pawn.new("♟", 8, "white", @board, @move_history)
         @white << Pawn.new("♟", 9, "white", @board, @move_history)
         @white << Pawn.new("♟", 10, "white", @board, @move_history)
@@ -65,14 +65,14 @@ class Table
         @white << Pawn.new("♟", 14, "white", @board, @move_history)
         @white << Pawn.new("♟", 15, "white", @board, @move_history)
 
-        @black << King.new("♔", 60, "black", @board)
-        @black << Queen.new("♕", 59, "black", @board)
-        @black << Bishop.new("♗", 58, "black", @board)
-        @black << Bishop.new("♗", 61, "black", @board)
-        @black << Knight.new("♘", 57, "black", @board)
-        @black << Knight.new("♘", 62, "black", @board)
-        @black << Rook.new("♖", 56, "black", @board)
-        @black << Rook.new("♖", 63, "black", @board)
+        @black << King.new("♔", 60, "black", @board, @move_history)
+        @black << Queen.new("♕", 59, "black", @board, @move_history)
+        @black << Bishop.new("♗", 58, "black", @board, @move_history)
+        @black << Bishop.new("♗", 61, "black", @board, @move_history)
+        @black << Knight.new("♘", 57, "black", @board, @move_history)
+        @black << Knight.new("♘", 62, "black", @board, @move_history)
+        @black << Rook.new("♖", 56, "black", @board, @move_history)
+        @black << Rook.new("♖", 63, "black", @board, @move_history)
         @black << Pawn.new("♙", 48, "black", @board, @move_history)
         @black << Pawn.new("♙", 49, "black", @board, @move_history)
         @black << Pawn.new("♙", 50, "black", @board, @move_history)
@@ -82,5 +82,9 @@ class Table
         @black << Pawn.new("♙", 54, "black", @board, @move_history)
         @black << Pawn.new("♙", 55, "black", @board, @move_history)
     end
+
+    # def collect_pieces
+    #     @board.each
+    # end
 
 end

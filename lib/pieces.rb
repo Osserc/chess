@@ -1,18 +1,19 @@
 require_relative "pieces_modules"
 
 class Piece
-    attr_accessor :position, :board, :moves, :displaced
+    attr_accessor :position, :board, :moves, :displaced, :move_history
     attr_reader :symbol, :color
 
     include Moves, Navigation
 
-    def initialize(symbol = nil, position = nil, color = nil, board)
+    def initialize(symbol = nil, position = nil, color = nil, board, move_history)
         @symbol = symbol
         @position = position
         @color = color
         @board = board
         @displaced = 0
         @moves = Array.new
+        @move_history = move_history
     end
 end
 
@@ -50,13 +51,7 @@ class Rook < Piece
 end
 
 class Pawn < Piece
-    attr_accessor :move_history
 
     STANDARD_MOVESET = [-16, -9, -8, -7, 7, 8, 9, 16]
-
-    def initialize(symbol, position, color, board, move_history = nil)
-        super(symbol, position, color, board)
-        @move_history = move_history
-    end
 
 end
