@@ -84,7 +84,20 @@ class Table
     end
 
     # def collect_pieces
+    #     @white.clear
+    #     @black.clear
     #     @board.each
     # end
+
+    def revert_move
+        move = @move_history.find_last
+        piece_to_move_back = move.value[:moved_piece]
+        distance_traveled = move.value[:distance_traveled]
+        piece_to_resurrect = move.value[:eaten_piece]
+        piece_to_resurrect.nil? ? @board[piece_to_move_back.position] = " " : @board[piece_to_move_back.position] = piece_to_resurrect
+        piece_to_move_back.position -= distance_traveled
+        @board[piece_to_move_back.position] = piece_to_move_back
+        @move_history.pop
+    end
 
 end

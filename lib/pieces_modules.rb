@@ -86,10 +86,10 @@ module Pawn_Limitations
     BLACK_MOVES = [7, 8, 9, 16]
     
     def refine_moveset_pawn
-        check_friendly
         pawn_color_check
         pawn_double_step
         pawn_obstruction
+        check_friendly
         pawn_eating
     end
 
@@ -121,7 +121,7 @@ end
 
 module Moves
 
-    include Navigation, King_Limitations, Queen_Limitations, Bishop_Limitations, Knight_Limitations, Rook_Limitations, Pawn_Limitations
+    include Navigation
 
     def define_moveset
         case self.class.name
@@ -177,17 +177,13 @@ module Moves
 
     def move_piece(destination)
         return if !self.moves.flatten.include?(destination - self.position)
-        logging_move(destination)
+        log_move(destination)
         self.board[self.position] = " "
         self.position = destination
         self.board[destination] = self
     end
 
-    def logging_move(destination)
-        # moved_piece = self
-        # distance_traveled = destination - self.position
-        # eaten_piece = self.board[destination] if self.board[destination] != " "
-        # eaten_piece = nil if self.board[destination] == " "
+    def log_move(destination)
         move = {
             :moved_piece => self,
             :distance_traveled => destination - self.position,
@@ -195,8 +191,6 @@ module Moves
         self.board[destination] == " " ? move[:eaten_piece] = nil : move[:eaten_piece] = self.board[destination]
         self.move_history.append(move)
     end
-
-
 
 end
 
