@@ -135,6 +135,30 @@ class Table
         black_threatened_squares
     end
 
+    def find_white_king
+        @white.each do | piece |
+            return piece if piece.class.name == "King" && piece.color == "white"
+        end
+    end
+
+    def find_black_king
+        @black.each do | piece |
+            return piece if piece.class.name == "King" && piece.color == "black"
+        end
+    end
+
+    def white_in_check?
+        black_threatened_squares = generate_threats_black
+        white_king = find_white_king
+        black_threatened_squares.include?(white_king.position)
+    end
+
+    def black_in_check?
+        white_threatened_squares = generate_threats_white
+        black_king = find_black_king
+        white_threatened_squares.include?(black_king.position)
+    end
+
     def revert_move
         move = @move_history.find_last
         piece_to_move_back = move.value[:moved_piece]
