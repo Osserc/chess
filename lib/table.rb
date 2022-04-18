@@ -16,6 +16,7 @@ class Table
         @board = make_board
         @white = Array.new
         @black = Array.new
+        @turn = 1
         # prepare_pieces
         # populate_board
         @move_history = MoveHistory.new
@@ -82,6 +83,15 @@ class Table
         @black << Pawn.new("♙", 54, "black", @board, @move_history)
         @black << Pawn.new("♙", 55, "black", @board, @move_history)
     end
+
+    def play_round(turn)
+        collect_pieces
+        (@white + @black).each do | piece |
+            piece.define_moveset
+        end
+        pick_and_move(turn)
+    end
+
 
     def collect_pieces
         @white.clear

@@ -176,11 +176,15 @@ module Moves
     end
 
     def move_piece(destination)
-        return if !self.moves.flatten.include?(destination - self.position)
+        # return if !self.moves.flatten.include?(destination - self.position)
         log_move(destination)
         self.board[self.position] = " "
         self.position = destination
         self.board[destination] = self
+    end
+
+    def valid_move?(destination)
+        self.moves.flatten.include?(destination - self.position)
     end
 
     def log_move(destination)
