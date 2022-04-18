@@ -16,20 +16,6 @@ class MoveHistory
         end
     end
 
-    # def append(value)
-    #     node = Node.new(value)
-    #     if @head.value.nil?
-    #         @head = node
-    #         @head.next_node = @tail
-    #     elsif @tail.value.nil?
-    #         @tail = node
-    #         @head.next_node = @tail
-    #     else
-    #         @tail.next_node = node
-    #         @tail = node
-    #     end
-    # end
-
     def size
         explorer = @head
         counter = 1

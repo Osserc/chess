@@ -84,14 +84,13 @@ class Table
         @black << Pawn.new("♙", 55, "black", @board, @move_history)
     end
 
-    def play_round(turn)
+    def play_round
         collect_pieces
-        (@white + @black).each do | piece |
-            piece.define_moveset
-        end
-        pick_and_move(turn)
-    end
+        # regenerate_moveset_white
+        # regenerate_moveset_black
 
+        @turn += 1
+    end
 
     def collect_pieces
         @white.clear
@@ -102,6 +101,38 @@ class Table
                 @black << square if square.color == "black"
             end
         end
+    end
+
+    def regenerate_moveset_white
+        @white.each do | piece |
+            piece.define_moveset
+        end
+    end
+
+    def regenerate_moveset_black
+        @black.each do | piece |
+            piece.define_moveset
+        end
+    end
+
+    def generate_threats_white
+        white_threatened_squares = Array.new
+        @white.each do | piece |
+            piece.moves.flatten.each do | single_move |
+                white_threatened_squares << single_move
+            end
+        end
+        white_threatened_squares
+    end
+
+    def generate_threats_black
+        black_threatened_squares = Array.new
+        @black.each do | piece |
+            piece.moves.flatten.each do | single_move |
+                black_threatened_squares << single_move
+            end
+        end
+        black_threatened_squares
     end
 
     def revert_move

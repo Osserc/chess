@@ -8,6 +8,7 @@ module King_Limitations
     def refine_moveset_king
         king_borders
         check_friendly
+        convert_to_squares
     end
 
     def king_borders
@@ -24,6 +25,7 @@ module Queen_Limitations
     def refine_moveset_queen
         self.moves.each { | direction | check_friendly(direction) }
         build_directions
+        self.moves.each { | direction | convert_to_squares(direction) }
     end
 
 
@@ -34,6 +36,7 @@ module Bishop_Limitations
     def refine_moveset_bishop
         self.moves.each { | direction | check_friendly(direction) }
         build_directions
+        self.moves.each { | direction | convert_to_squares(direction) }
     end
 
 end
@@ -56,6 +59,7 @@ module Knight_Limitations
     def refine_moveset_knight
         check_friendly
         knight_borders
+        convert_to_squares
     end
 
     def knight_borders
@@ -76,6 +80,7 @@ module Rook_Limitations
     def refine_moveset_rook
         self.moves.each { | direction | check_friendly(direction) }
         build_directions
+        self.moves.each { | direction | convert_to_squares(direction) }
     end
 
 end
@@ -91,6 +96,7 @@ module Pawn_Limitations
         pawn_obstruction
         check_friendly
         pawn_eating
+        convert_to_squares
     end
 
     def pawn_color_check
@@ -175,8 +181,14 @@ module Moves
         end
     end
 
+    def convert_to_squares(moves = self.moves)
+        moves.map! do | single_move |
+            single_move += @position
+        end
+    end
+
     def move_piece(destination)
-        # return if !self.moves.flatten.include?(destination - self.position)
+        # return if !valid_move?
         log_move(destination)
         self.board[self.position] = " "
         self.position = destination
@@ -184,7 +196,7 @@ module Moves
     end
 
     def valid_move?(destination)
-        self.moves.flatten.include?(destination - self.position)
+        self.moves.flatten.include?(destination)
     end
 
     def log_move(destination)
@@ -197,44 +209,3 @@ module Moves
     end
 
 end
-
-    # def move_piece(board, destination)
-    #     if check_legality(board, destination)
-    #         board.board[@position] = " "
-    #         @position = destination
-    #         board.board[destination] = self
-    #     else
-    #         puts "Illegal move."
-    #         move_piece(board, select_destination(board))
-    #     end
-    # end
-
-    # def check_legality(board, destination)
-    #     if board.board[destination].class.ancestors.include?(Piece)
-    #         return false if board.board[destination].color == @color
-    #     end
-    #     moves = define_moveset(board, destination)
-    #     differential = destination - @position
-    #     return false if moves.nil?
-    #     return true if moves.include?(differential)
-    #     return false
-    # end
-
-    # def check_horizontal_distance(board)
-    #     right_border = Board::RIGHT_BORDER[Board::RIGHT_BORDER.index { | element | element >= self.position }]
-    #     distance_right = right_border - self.position
-    #     distance_left = 8 - distance_right - 1
-    #     return distance_right, distance_left
-    # end
-
-    # def check_vertical_distance(board)
-    #     jumps = 0
-    #     dummy = Integer(@position)
-    #     until Board::TOP_BORDER.include?(dummy) do
-    #         dummy += 8
-    #         jumps += 1
-    #     end
-    #     distance_up = jumps
-    #     distance_down = 8 - distance_up - 1
-    #     return distance_up, distance_down
-    # end
