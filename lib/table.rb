@@ -4,7 +4,7 @@ require_relative "history"
 class Table
     attr_accessor :board, :white, :black, :move_history
 
-    include Navigation
+    include Navigation, Check
 
     TOP_BORDER = (0..7).to_a
     LEFT_BORDER = [0, 8, 16, 24, 32, 40, 48, 56]
@@ -115,48 +115,10 @@ class Table
         end
     end
 
-    def generate_threats_white
-        white_threatened_squares = Array.new
-        @white.each do | piece |
-            piece.moves.flatten.each do | single_move |
-                white_threatened_squares << single_move
-            end
+    def regenerate_moveset(set)
+        set.each do | piece |
+            piece.define_moveset
         end
-        white_threatened_squares
-    end
-
-    def generate_threats_black
-        black_threatened_squares = Array.new
-        @black.each do | piece |
-            piece.moves.flatten.each do | single_move |
-                black_threatened_squares << single_move
-            end
-        end
-        black_threatened_squares
-    end
-
-    def find_white_king
-        @white.each do | piece |
-            return piece if piece.class.name == "King" && piece.color == "white"
-        end
-    end
-
-    def find_black_king
-        @black.each do | piece |
-            return piece if piece.class.name == "King" && piece.color == "black"
-        end
-    end
-
-    def white_in_check?
-        black_threatened_squares = generate_threats_black
-        white_king = find_white_king
-        black_threatened_squares.include?(white_king.position)
-    end
-
-    def black_in_check?
-        white_threatened_squares = generate_threats_white
-        black_king = find_black_king
-        white_threatened_squares.include?(black_king.position)
     end
 
     def revert_move

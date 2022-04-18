@@ -35,27 +35,4 @@ class Game
 
 end
 
-# Make the move in question
-# Test if the player who made the move is in check
-# revert the move
-
 Game.new.gameplay
-
-#     def gameplay
-#         # @board.populate_board(@white, @black)
-#         @board.board[27] = Queen.new("Q", 27, "white")
-#         @board.board[11] = Rook.new("R", 11, "white")
-#         @board.board[20] = Pawn.new("P", 20, "black")
-#         @board.display_board
-#         piece = @board.board[27]
-#         loop do
-#             piece = @board.board[select_piece(@board, @turn)]
-#             piece.move_piece(@board, select_destination(@board))
-#             @board.display_board
-#             @turn += 1
-#         end
-#     end
-
-# end
-
-# Game.new.gameplay

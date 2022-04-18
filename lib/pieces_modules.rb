@@ -127,7 +127,7 @@ end
 
 module Moves
 
-    include Navigation
+    include Navigation, Check
 
     def define_moveset
         case self.class.name
