@@ -300,12 +300,25 @@ module Moves
         end
     end
 
+    def discover_castling(destination)
+        return @board[2], 2 if destination == 1
+        return @board[4], -3 if destination == 5
+        return @board[58], 2 if destination == 57
+        return @board[60], -3 if destination == 61
+    end
+
     def log_move(destination)
         move = {
             :moved_piece => self,
             :distance_traveled => destination - self.position,
         }
         self.board[destination] == " " ? move[:eaten_piece] = nil : move[:eaten_piece] = self.board[destination]
+        if check_castling(destination)
+            move[:castled] = {
+                :rook => discover_castling(destination)[0],
+                :distance => discover_castling(destination)[1]
+            }
+        end
         self.move_history.append(move)
     end
 
