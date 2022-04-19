@@ -153,6 +153,7 @@ module Pawn_Limitations
         pawn_obstruction
         check_friendly
         pawn_eating
+        en_passant
         convert_to_squares
     end
 
@@ -178,6 +179,22 @@ module Pawn_Limitations
         self.moves -= [9] if self.board[self.position + 9] == " "
         self.moves -= [-7] if self.board[self.position - 7] == " "
         self.moves -= [-9] if self.board[self.position - 9] == " "
+    end
+
+    def en_passant
+        if !move_history.find_last.value.nil? && @turn.odd?
+            pawn = @move_history.find_last.value[:moved_piece]
+            if pawn.class.name == "Pawn" && pawn.displaced == 1
+                self.moves += [7] if @board[self.position - 1] == pawn
+                self.moves += [9] if @board[self.position + 1] == pawn
+            end
+        elsif !move_history.find_last.value.nil? && !@turn.odd?
+            pawn = @move_history.find_last.value[:moved_piece]
+            if pawn.class.name == "Pawn" && pawn.displaced == 1
+                self.moves += [-9] if @board[self.position - 1] == pawn
+                self.moves += [-7] if @board[self.position + 1] == pawn
+            end
+        end
     end
 
 end
@@ -267,9 +284,11 @@ module Moves
     def move_piece(destination)
         castling_move_tower(destination) if check_castling(destination)
         log_move(destination)
+        en_passant_remove_pawn(destination) if check_en_passant(destination)
         self.board[self.position] = " "
         self.position = destination
         self.board[destination] = self
+        self.displaced += 1
     end
 
     def check_castling(destination)
@@ -311,6 +330,21 @@ module Moves
         return @board[60], -3 if destination == 61
     end
 
+    def check_en_passant(destination)
+        if @board[destination] == " " && [-8, 8].any? { | single_move | @board[destination + single_move].class.name == "Pawn" } && (destination % 8 != self.position % 8)
+            return true
+        else
+            return false
+        end
+    end
+
+    def en_passant_remove_pawn(destination)
+        @board[destination - 8] = " " if @turn.odd?
+        @board[destination + 8] = " " if !@turn.odd?
+        # pawn = @move_history.find_last.value[:moved_piece]
+        # @board[pawn.position] = " "
+    end
+
     def log_move(destination)
         move = {
             :moved_piece => self,
@@ -323,6 +357,12 @@ module Moves
             move[:castled] = {
                 :rook => discover_castling(destination)[0],
                 :distance => discover_castling(destination)[1]
+            }
+        end
+
+        if check_en_passant(destination)
+            move[:en_passant] = {
+                :pawn => @move_history.find_last.value[:moved_piece]
             }
         end
 

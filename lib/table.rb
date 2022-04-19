@@ -138,16 +138,16 @@ class Table
     end
 
     def revert_move
-        move = @move_history.find_last
-        piece_to_move_back = move.value[:moved_piece]
-        distance_traveled = move.value[:distance_traveled]
-        piece_to_resurrect = move.value[:eaten_piece]
+        move = @move_history.find_last.value
+        piece_to_move_back = move[:moved_piece]
+        distance_traveled = move[:distance_traveled]
+        piece_to_resurrect = move[:eaten_piece]
         piece_to_resurrect.nil? ? @board[piece_to_move_back.position] = " " : @board[piece_to_move_back.position] = piece_to_resurrect
         piece_to_move_back.position -= distance_traveled
         @board[piece_to_move_back.position] = piece_to_move_back
+        revert_move_castling(move) if move.key?(:castled)
+        revert_move_en_passant(move) if move.key?(:en_passant)
         @move_history.pop
-        revert_move_castling(move.value) if move.value.key?(:castled)
-
     end
 
     def revert_move_castling(move)
@@ -156,6 +156,11 @@ class Table
         @board[rook.position] = " "
         rook.position -= distance
         @board[rook.position] = rook
+    end
+
+    def revert_move_en_passant(move)
+        pawn = move[:en_passant][:pawn]
+        @board[pawn.position] = pawn
     end
 
 end
