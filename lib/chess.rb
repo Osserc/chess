@@ -44,17 +44,10 @@ class Game
         @table.board[0] = King.new("Kw", 0, "white", @table.board, @table.move_history, @table.turn)
         @table.board[7] = King.new("Kb", 7, "black", @table.board, @table.move_history, @table.turn)
 
-        @table.board[35] = Pawn.new("Pw", 35, "white", @table.board, @table.move_history, @table.turn)
+        @table.board[60] = Pawn.new("Pw", 60, "white", @table.board, @table.move_history, @table.turn)
         @table.board[50] = Pawn.new("Pb", 50, "black", @table.board, @table.move_history, @table.turn)
-        white_pawn = @table.board[35]
-        black_pawn = @table.board[50]
-        @table.prepare_turn
-        black_pawn.move_piece(34)
-
-        @table.prepare_turn
-        white_pawn.move_piece(42)
         @table.display_board
-        @table.revert_move
+        @table.promotion
         @table.display_board
 
         # loop do

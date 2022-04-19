@@ -163,4 +163,55 @@ class Table
         @board[pawn.position] = pawn
     end
 
+    def promotion
+        pawn = find_promotable_pawn
+        if !pawn.nil?
+            promote_pawn(pawn, input_promotion)
+        end
+    end
+
+    def find_promotable_pawn
+        pawn = nil
+        TOP_BORDER.each do | square |
+            if @board[square].class.ancestors.include?(Piece)
+                pawn = @board[square] if @board[square].class.name == "Pawn"
+            end
+        end
+        BOTTOM_BORDER.each do | square |
+            if @board[square].class.ancestors.include?(Piece)
+                pawn = @board[square] if @board[square].class.name == "Pawn"
+            end
+        end
+        pawn
+    end
+
+    def input_promotion
+        puts "A pawn can be promoted. What piece do you want it to become?"
+        answer = gets.chomp.downcase
+        until ["queen", "bishop", "knight", "rook"].include?(answer) do
+            puts "Invalid input."
+            answer = gets.chomp.downcase
+        end
+        answer
+    end
+
+    def promote_pawn(pawn, answer)
+        position = pawn.position.dup
+        case answer
+        when "queen"
+            @board[pawn.position] = Queen.new("♛", pawn.position, pawn.color, @board, @move_history, @turn) if @turn.odd?
+            @board[pawn.position] = Queen.new("♕", pawn.position, pawn.color, @board, @move_history, @turn) if !@turn.odd?
+        when "bishop"
+            @board[pawn.position] = Bishop.new("♝", pawn.position, pawn.color, @board, @move_history, @turn) if @turn.odd?
+            @board[pawn.position] = Bishop.new("♗", pawn.position, pawn.color, @board, @move_history, @turn) if !@turn.odd?
+        when "knight"
+            @board[pawn.position] = Knight.new("♞", pawn.position, pawn.color, @board, @move_history, @turn) if @turn.odd?
+            @board[pawn.position] = Knight.new("♘", pawn.position, pawn.color, @board, @move_history, @turn) if !@turn.odd?
+        when "rook"
+            @board[pawn.position] = Rook.new("♜", pawn.position, pawn.color, @board, @move_history, @turn) if @turn.odd?
+            @board[pawn.position] = Rook.new("♖", pawn.position, pawn.color, @board, @move_history, @turn) if !@turn.odd?
+            @board[position].displaced = 1
+        end
+    end
+
 end
