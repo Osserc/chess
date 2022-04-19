@@ -86,8 +86,9 @@ class Table
 
     def play_round
         prepare_turn
+        presentation
         piece = select_piece
-        destination = select_destination
+        destination = select_destination(piece)
         piece.move_piece(destination)
         check_promotion
         @turn += 1
@@ -95,10 +96,18 @@ class Table
 
     def prepare_turn
         display_board
-        collect_pieces_all
-        regenerate_moveset_all
+        # collect_pieces_all
+        # regenerate_moveset_all
         purge_illegal_moves
         check_endgame
+    end
+
+    def presentation
+        if @turn.odd?
+            puts "White's turn."
+        else
+            puts "Black's turn."
+        end
     end
 
     def check_endgame
@@ -142,6 +151,7 @@ class Table
     def revert_move
         move = @move_history.find_last.value
         piece_to_move_back = move[:moved_piece]
+        piece_to_move_back.displaced -= 1
         distance_traveled = move[:distance_traveled]
         piece_to_resurrect = move[:eaten_piece]
         piece_to_resurrect.nil? ? @board[piece_to_move_back.position] = " " : @board[piece_to_move_back.position] = piece_to_resurrect
