@@ -280,20 +280,24 @@ module Moves
         if @turn.odd?
             if destination == 1
                 rook = self.board[0]
+                rook.position = 2
                 self.board[2] = rook
                 self.board[0] = " "
             elsif destination == 5
                 rook = self.board[7]
+                rook.position = 4
                 self.board[4] = rook
                 self.board[7] = " "
             end
         elsif !@turn.odd?
             if destination == 57
+                rook.position = 58
                 rook = self.board[56]
                 self.board[58] = rook
                 self.board[56] = " "
             elsif destination == 61
                 rook = self.board[63]
+                rook.position = 60
                 self.board[60] = rook
                 self.board[63] = " "
             end
@@ -312,13 +316,16 @@ module Moves
             :moved_piece => self,
             :distance_traveled => destination - self.position,
         }
+
         self.board[destination] == " " ? move[:eaten_piece] = nil : move[:eaten_piece] = self.board[destination]
+
         if check_castling(destination)
             move[:castled] = {
                 :rook => discover_castling(destination)[0],
                 :distance => discover_castling(destination)[1]
             }
         end
+
         self.move_history.append(move)
     end
 

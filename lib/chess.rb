@@ -52,7 +52,8 @@ class Game
         @table.prepare_turn
         king.move_piece(1)
         @table.display_board
-
+        @table.revert_move
+        @table.display_board
         # loop do
         #     @table.prepare_turn
         # end

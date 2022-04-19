@@ -146,6 +146,16 @@ class Table
         piece_to_move_back.position -= distance_traveled
         @board[piece_to_move_back.position] = piece_to_move_back
         @move_history.pop
+        revert_move_castling(move.value) if move.value.key?(:castled)
+
+    end
+
+    def revert_move_castling(move)
+        rook = move[:castled][:rook]
+        distance = move[:castled][:distance]
+        @board[rook.position] = " "
+        rook.position -= distance
+        @board[rook.position] = rook
     end
 
 end
