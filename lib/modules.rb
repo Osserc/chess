@@ -48,18 +48,8 @@ module Check
         threatened_squares
     end
 
-    def generate_threatened_squares(set)
-        threatened_squares = Array.new
-        set.each do | piece |
-            piece.moves.flatten.each do | single_move |
-                threatened_squares << single_move
-            end
-        end
-        threatened_squares
-    end
-
-    def find_king(set, color)
-        set.each do | piece |
+    def find_king(color)
+        @board.each do | piece |
             return piece if piece.class.name == "King" && piece.color == color
         end
     end
@@ -80,80 +70,55 @@ module Check
         threatened_squares.include?(king.position)
     end
 
-    def check_game_state
+    def purge_illegal_moves
         if @turn.odd?
             active_pieces = collect_set("white")
             active_pieces.each do | piece |
                 illegal_moves = Array.new
-                piece.moves.flatten.each do | single_move |
-                    piece.moved_piece(single_move)
+                piece.moves.each do | single_move |
+                    piece.move_piece(single_move)
                     opponent_pieces = collect_set("black")
                     regenerate_moveset(opponent_pieces)
-                    illegal_moves << single_move if in_check?(set, "white")
+                    illegal_moves << single_move if in_check?(opponent_pieces, "white")
+                    revert_move
                 end
+                piece.moves -= illegal_moves
             end
-            piece.moves -= 
+        else
+            active_pieces = collect_set("black")
+            active_pieces.each do | piece |
+                illegal_moves = Array.new
+                piece.moves.each do | single_move |
+                    piece.move_piece(single_move)
+                    opponent_pieces = collect_set("white")
+                    regenerate_moveset(opponent_pieces)
+                    illegal_moves << single_move if in_check?(opponent_pieces, "black")
+                    revert_move
+                end
+                piece.moves -= illegal_moves
+            end         
         end
     end
 
-    # def find_white_king
-    #     @white.each do | piece |
-    #         return piece if piece.class.name == "King" && piece.color == "white"
-    #     end
-    # end
-
-    # def find_black_king
-    #     @black.each do | piece |
-    #         return piece if piece.class.name == "King" && piece.color == "black"
-    #     end
-    # end
-
-    # def white_in_check?
-    #     black_threatened_squares = generate_threats_black
-    #     white_king = find_white_king
-    #     black_threatened_squares.include?(white_king.position)
-    # end
-
-    # def black_in_check?
-    #     white_threatened_squares = generate_threats_white
-    #     black_king = find_black_king
-    #     white_threatened_squares.include?(black_king.position)
-    # end
-
-    # def collect_active_pieces
-    #     if @turn.odd?
-    #         active_pieces = Array.new
-    #         @board.each do | square |
-    #             if square.class.ancestors.include?(Piece)
-    #                 active_pieces << square if square.color == "white"
-    #             end
-    #         end
-    #     else
-    #         @board.each do | square |
-    #             if square.class.ancestors.include?(Piece)
-    #                 active_pieces << square if square.color == "black"
-    #             end
-    #         end
-    #     end
-    #     active_pieces
-    # end
-
-    # def collect_opponent_pieces
-    #     if @turn.odd?
-    #         opponent_pieces = Array.new
-    #         @board.each do | square |
-    #             if square.class.ancestors.include?(Piece)
-    #                 opponent_pieces << square if square.color == "white"
-    #             end
-    #         end
-    #     else
-    #         @board.each do | square |
-    #             if square.class.ancestors.include?(Piece)
-    #                 opponent_pieces << square if square.color == "black"
-    #             end
-    #         end
-    #     end
-    #     opponent_pieces
-    # end
+    def count_moves
+        if @turn.odd?
+            active_pieces = collect_set("white")
+            possible_moves = Array.new
+            active_pieces.each do | piece |
+                piece.moves.each do | single_move |
+                    possible_moves << single_move
+                end
+            end
+        else
+            active_pieces = collect_set("black")
+            possible_moves = Array.new
+            active_pieces.each do | piece |
+                piece.moves.each do | single_move |
+                    possible_moves << single_move
+                end
+            end
+        end
+        possible_moves
+    end
 
 end

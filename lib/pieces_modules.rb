@@ -25,7 +25,7 @@ module Queen_Limitations
     def refine_moveset_queen
         self.moves.each { | direction | check_friendly(direction) }
         build_directions
-        self.moves.each { | direction | convert_to_squares(direction) }
+        convert_to_squares
     end
 
 
@@ -36,7 +36,7 @@ module Bishop_Limitations
     def refine_moveset_bishop
         self.moves.each { | direction | check_friendly(direction) }
         build_directions
-        self.moves.each { | direction | convert_to_squares(direction) }
+        convert_to_squares
     end
 
 end
@@ -80,7 +80,7 @@ module Rook_Limitations
     def refine_moveset_rook
         self.moves.each { | direction | check_friendly(direction) }
         build_directions
-        self.moves.each { | direction | convert_to_squares(direction) }
+        convert_to_squares
     end
 
 end
@@ -181,11 +181,18 @@ module Moves
         end
     end
 
-    def convert_to_squares(moves = self.moves)
-        moves.map! do | single_move |
+    def convert_to_squares
+        self.moves.flatten!
+        self.moves.map! do | single_move |
             single_move += @position
         end
     end
+
+    # def convert_to_squares(moves = self.moves)
+    #     moves.map! do | single_move |
+    #         single_move += @position
+    #     end
+    # end
 
     def move_piece(destination)
         # return if !valid_move?

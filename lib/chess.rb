@@ -12,25 +12,23 @@ class Game
     end
 
     def gameplay
-        @table.board[11] = Rook.new("R", 11, "white", @table.board, @table.move_history)
-        @table.board[25] = Bishop.new("B", 25, "black", @table.board, @table.move_history)
-        @table.board[30] = Queen.new("Q", 30, "black", @table.board, @table.move_history)
-        @table.board[10] = Pawn.new("P", 10, "white", @table.board, @table.move_history)
-        @table.board[7] = King.new("Kw", 7, "white", @table.board, @table.move_history)
-        @table.board[13] = King.new("Kb", 13, "black", @table.board, @table.move_history)
-        rook = @table.board[11]
+
+        @table.board[19] = King.new("Kw", 19, "white", @table.board, @table.move_history)
+        @table.board[63] = King.new("Kb", 63, "black", @table.board, @table.move_history)
+        @table.board[61] = Knight.new("Nw", 61, "white", @table.board, @table.move_history)
+        @table.board[51] = Rook.new("Kb", 51, "black", @table.board, @table.move_history)
+        bw = @table.board[19]
+        bk = @table.board[63]
+        rook = @table.board[51]
+        knight = @table.board[35]
         bishop = @table.board[25]
         queen = @table.board[30]
         pawn = @table.board[10]
-        @table.collect_pieces
-        @table.display_board
-        white_king = @table.find_white_king
-        black_king = @table.find_black_king
-        @table.regenerate_moveset_white
-        @table.regenerate_moveset_black
-        white = @table.black_in_check?
-        black = @table.white_in_check?
-        puts "STOP"
+        loop do
+            @table.prepare_turn
+        end
+
+
     end
 
 end
