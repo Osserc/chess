@@ -17,8 +17,8 @@ class Table
         @white = Array.new
         @black = Array.new
         @turn = 1
-        # prepare_pieces
-        # populate_board
+        prepare_pieces
+        populate_board
         @move_history = MoveHistory.new
     end
 
@@ -86,17 +86,17 @@ class Table
 
     def play_round
         prepare_turn
-
+        
 
         @turn += 1
     end
 
     def prepare_turn
         display_board
-        collect_pieces_all
-        regenerate_moveset_all
-        # purge_illegal_moves
-        # check_endgame
+        # collect_pieces_all
+        # regenerate_moveset_all
+        purge_illegal_moves
+        check_endgame
     end
 
     def check_endgame
@@ -121,15 +121,15 @@ class Table
         puts "Stalemate."
     end
 
-    def collect_pieces_all
-        @white = collect_set("white")
-        @black = collect_set("black")
-    end
+    # def collect_pieces_all
+    #     @white = collect_set("white")
+    #     @black = collect_set("black")
+    # end
 
-    def regenerate_moveset_all
-        regenerate_moveset(@white)
-        regenerate_moveset(@black)
-    end
+    # def regenerate_moveset_all
+    #     regenerate_moveset(@white)
+    #     regenerate_moveset(@black)
+    # end
 
     def regenerate_moveset(set)
         set.each do | piece |

@@ -153,7 +153,7 @@ module Pawn_Limitations
         pawn_obstruction
         check_friendly
         pawn_eating
-        en_passant
+        en_passant unless @turn == 1
         convert_to_squares
     end
 

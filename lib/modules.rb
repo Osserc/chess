@@ -53,6 +53,7 @@ module Check
     def purge_illegal_moves
         if @turn.odd?
             active_pieces = collect_set("white")
+            regenerate_moveset(active_pieces)
             active_pieces.each do | piece |
                 illegal_moves = Array.new
                 piece.moves.each do | single_move |
@@ -66,6 +67,7 @@ module Check
             end
         else
             active_pieces = collect_set("black")
+            regenerate_moveset(active_pieces)
             active_pieces.each do | piece |
                 illegal_moves = Array.new
                 piece.moves.each do | single_move |
