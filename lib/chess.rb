@@ -2,6 +2,7 @@ require_relative "table"
 require_relative "pieces"
 require_relative "pieces_modules"
 require_relative "modules"
+require_relative "history"
 
 class Game
 

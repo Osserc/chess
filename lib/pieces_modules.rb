@@ -124,7 +124,7 @@ module Rook_Limitations
     UPPER_LIMITATIONS = [[-8]]
     LEFT_LIMITATIONS = [[-1]]
     RIGHT_LIMITATIONS = [[1]]
-    LOWER_LIMITATIONS = [[-8]]
+    LOWER_LIMITATIONS = [[8]]
 
     def refine_moveset_rook
         self.moves.each { | direction | check_friendly(direction) }
@@ -236,10 +236,6 @@ module Moves
         moves.compact!
     end
 
-    def special_borders
-
-    end
-
     def build_directions
         self.moves.each do | direction |
             unless direction.empty?
@@ -331,7 +327,7 @@ module Moves
     end
 
     def check_en_passant(destination)
-        if @board[destination] == " " && [-8, 8].any? { | single_move | @board[destination + single_move].class.name == "Pawn" } && (destination % 8 != self.position % 8)
+        if self.class.name == "Pawn" && @board[destination] == " " && [-8, 8].any? { | single_move | @board[destination + single_move].class.name == "Pawn" } && (destination % 8 != self.position % 8)
             return true
         else
             return false
@@ -341,8 +337,6 @@ module Moves
     def en_passant_remove_pawn(destination)
         @board[destination - 8] = " " if @turn.odd?
         @board[destination + 8] = " " if !@turn.odd?
-        # pawn = @move_history.find_last.value[:moved_piece]
-        # @board[pawn.position] = " "
     end
 
     def log_move(destination)

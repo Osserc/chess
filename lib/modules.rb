@@ -15,16 +15,17 @@ module Navigation
     end
 
     def select_piece
+        puts "Select the piece you want to move."
         answer = gets.chomp.upcase
-        until validate_input do
-            puts "Inavlid input."
+        until validate_input(answer) do
+            puts "Invalid input."
             answer = gets.chomp.upcase
         end
         action(answer)
     end
 
     def validate_input(answer)
-        return true if (LETTERS.include?(answer[0]) && NUMBERS.include?(answer[1])) || answer == "SAVE" || answer == "LOAD"
+        return true if (LETTERS.include?(answer[0]) && NUMBERS.include?(answer[1].to_i)) || answer == "SAVE" || answer == "LOAD"
     end
 
     def action(answer)
@@ -36,19 +37,19 @@ module Navigation
             puts "Which savegame do you want to load?"
             load_functionality(gets.chomp)
         else
-            check_piece(convert_front_to_back(answer))
-            return convert_front_to_back(answer)
+            piece = check_piece(convert_front_to_back(answer))
+            return piece
         end
     end
 
     def check_piece(coord)
         if @board[coord].class.ancestors.include?(Piece)
             if @turn.odd?
-                return @board[coord] if @board[coord].color == "white" && !@board[coord].empty?
+                return @board[coord] if @board[coord].color == "white"
                 puts "Invalid coordinates."
                 select_piece
             else
-                return @board[coord] if @board[coord].color == "white" && !@board[coord].empty?
+                return @board[coord] if @board[coord].color == "black"
                 puts "Invalid coordinates."
                 select_piece
             end
@@ -101,7 +102,7 @@ module Check
     def purge_illegal_moves
         if @turn.odd?
             active_pieces = collect_set("white")
-            regenerate_moveset(active_pieces)
+            # regenerate_moveset(active_pieces)
             active_pieces.each do | piece |
                 illegal_moves = Array.new
                 piece.moves.each do | single_move |
@@ -115,7 +116,7 @@ module Check
             end
         else
             active_pieces = collect_set("black")
-            regenerate_moveset(active_pieces)
+            # regenerate_moveset(active_pieces)
             active_pieces.each do | piece |
                 illegal_moves = Array.new
                 piece.moves.each do | single_move |
