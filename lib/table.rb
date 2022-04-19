@@ -2,7 +2,7 @@ require_relative "modules"
 require_relative "history"
 
 class Table
-    attr_accessor :board, :white, :black, :move_history
+    attr_accessor :board, :white, :black, :move_history, :turn
 
     include Navigation, Check
 
@@ -49,39 +49,39 @@ class Table
     end
 
     def prepare_pieces
-        @white << King.new("♚", 4, "white", @board, @move_history)
-        @white << Queen.new("♛", 3, "white", @board, @move_history)
-        @white << Bishop.new("♝", 2, "white", @board, @move_history)
-        @white << Bishop.new("♝", 5, "white", @board, @move_history)
-        @white << Knight.new("♞", 1, "white", @board, @move_history)
-        @white << Knight.new("♞", 6, "white", @board, @move_history)
-        @white << Rook.new("♜", 0, "white", @board, @move_history)
-        @white << Rook.new("♜", 7, "white", @board, @move_history)
-        @white << Pawn.new("♟", 8, "white", @board, @move_history)
-        @white << Pawn.new("♟", 9, "white", @board, @move_history)
-        @white << Pawn.new("♟", 10, "white", @board, @move_history)
-        @white << Pawn.new("♟", 11, "white", @board, @move_history)
-        @white << Pawn.new("♟", 12, "white", @board, @move_history)
-        @white << Pawn.new("♟", 13, "white", @board, @move_history)
-        @white << Pawn.new("♟", 14, "white", @board, @move_history)
-        @white << Pawn.new("♟", 15, "white", @board, @move_history)
+        @white << King.new("♚", 3, "white", @board, @move_history, @turn)
+        @white << Queen.new("♛", 4, "white", @board, @move_history, @turn)
+        @white << Bishop.new("♝", 2, "white", @board, @move_history, @turn)
+        @white << Bishop.new("♝", 5, "white", @board, @move_history, @turn)
+        @white << Knight.new("♞", 1, "white", @board, @move_history, @turn)
+        @white << Knight.new("♞", 6, "white", @board, @move_history, @turn)
+        @white << Rook.new("♜", 0, "white", @board, @move_history, @turn)
+        @white << Rook.new("♜", 7, "white", @board, @move_history, @turn)
+        @white << Pawn.new("♟", 8, "white", @board, @move_history, @turn)
+        @white << Pawn.new("♟", 9, "white", @board, @move_history, @turn)
+        @white << Pawn.new("♟", 10, "white", @board, @move_history, @turn)
+        @white << Pawn.new("♟", 11, "white", @board, @move_history, @turn)
+        @white << Pawn.new("♟", 12, "white", @board, @move_history, @turn)
+        @white << Pawn.new("♟", 13, "white", @board, @move_history, @turn)
+        @white << Pawn.new("♟", 14, "white", @board, @move_history, @turn)
+        @white << Pawn.new("♟", 15, "white", @board, @move_history, @turn)
 
-        @black << King.new("♔", 60, "black", @board, @move_history)
-        @black << Queen.new("♕", 59, "black", @board, @move_history)
-        @black << Bishop.new("♗", 58, "black", @board, @move_history)
-        @black << Bishop.new("♗", 61, "black", @board, @move_history)
-        @black << Knight.new("♘", 57, "black", @board, @move_history)
-        @black << Knight.new("♘", 62, "black", @board, @move_history)
-        @black << Rook.new("♖", 56, "black", @board, @move_history)
-        @black << Rook.new("♖", 63, "black", @board, @move_history)
-        @black << Pawn.new("♙", 48, "black", @board, @move_history)
-        @black << Pawn.new("♙", 49, "black", @board, @move_history)
-        @black << Pawn.new("♙", 50, "black", @board, @move_history)
-        @black << Pawn.new("♙", 51, "black", @board, @move_history)
-        @black << Pawn.new("♙", 52, "black", @board, @move_history)
-        @black << Pawn.new("♙", 53, "black", @board, @move_history)
-        @black << Pawn.new("♙", 54, "black", @board, @move_history)
-        @black << Pawn.new("♙", 55, "black", @board, @move_history)
+        @black << King.new("♔", 59, "black", @board, @move_history, @turn)
+        @black << Queen.new("♕", 60, "black", @board, @move_history, @turn)
+        @black << Bishop.new("♗", 58, "black", @board, @move_history, @turn)
+        @black << Bishop.new("♗", 61, "black", @board, @move_history, @turn)
+        @black << Knight.new("♘", 57, "black", @board, @move_history, @turn)
+        @black << Knight.new("♘", 62, "black", @board, @move_history, @turn)
+        @black << Rook.new("♖", 56, "black", @board, @move_history, @turn)
+        @black << Rook.new("♖", 63, "black", @board, @move_history, @turn)
+        @black << Pawn.new("♙", 48, "black", @board, @move_history, @turn)
+        @black << Pawn.new("♙", 49, "black", @board, @move_history, @turn)
+        @black << Pawn.new("♙", 50, "black", @board, @move_history, @turn)
+        @black << Pawn.new("♙", 51, "black", @board, @move_history, @turn)
+        @black << Pawn.new("♙", 52, "black", @board, @move_history, @turn)
+        @black << Pawn.new("♙", 53, "black", @board, @move_history, @turn)
+        @black << Pawn.new("♙", 54, "black", @board, @move_history, @turn)
+        @black << Pawn.new("♙", 55, "black", @board, @move_history, @turn)
     end
 
     def play_round

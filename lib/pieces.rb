@@ -6,7 +6,7 @@ class Piece
 
     include Moves, Navigation
 
-    def initialize(symbol = nil, position = nil, color = nil, board, move_history)
+    def initialize(symbol = nil, position = nil, color = nil, board, move_history, turn)
         @symbol = symbol
         @position = position
         @color = color
@@ -14,6 +14,7 @@ class Piece
         @displaced = 0
         @moves = Array.new
         @move_history = move_history
+        @turn = turn
     end
 end
 
