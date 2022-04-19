@@ -14,6 +14,54 @@ module Navigation
         converted
     end
 
+    def select_piece
+        answer = gets.chomp.upcase
+        until validate_input do
+            puts "Inavlid input."
+            answer = gets.chomp.upcase
+        end
+        action(answer)
+    end
+
+    def validate_input(answer)
+        return true if (LETTERS.include?(answer[0]) && NUMBERS.include?(answer[1])) || answer == "SAVE" || answer == "LOAD"
+    end
+
+    def action(answer)
+        case answer
+        when "SAVE"
+            puts "How do you want to call your save?"
+            save_functionality(gets.chomp)
+        when "LOAD"
+            puts "Which savegame do you want to load?"
+            load_functionality(gets.chomp)
+        else
+            check_piece(convert_front_to_back(answer))
+            return convert_front_to_back(answer)
+        end
+    end
+
+    def check_piece(coord)
+        if @board[coord].class.ancestors.include?(Piece)
+            if @turn.odd?
+                return @board[coord] if @board[coord].color == "white" && !@board[coord].empty?
+                puts "Invalid coordinates."
+                select_piece
+            else
+                return @board[coord] if @board[coord].color == "white" && !@board[coord].empty?
+                puts "Invalid coordinates."
+                select_piece
+            end
+        else
+            puts "Invalid coordinates."
+            select_piece
+        end
+    end
+
+    def select_destination
+
+    end
+
 end
 
 module Check

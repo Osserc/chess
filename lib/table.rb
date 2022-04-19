@@ -86,8 +86,10 @@ class Table
 
     def play_round
         prepare_turn
-        
-
+        piece = select_piece
+        destination = select_destination
+        piece.move_piece(destination)
+        check_promotion
         @turn += 1
     end
 
@@ -163,7 +165,7 @@ class Table
         @board[pawn.position] = pawn
     end
 
-    def promotion
+    def check_promotion
         pawn = find_promotable_pawn
         if !pawn.nil?
             promote_pawn(pawn, input_promotion)
