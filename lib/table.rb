@@ -95,8 +95,8 @@ class Table
         display_board
         collect_pieces_all
         regenerate_moveset_all
-        purge_illegal_moves
-        check_endgame
+        # purge_illegal_moves
+        # check_endgame
     end
 
     def check_endgame

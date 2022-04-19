@@ -8,7 +8,7 @@ module King_Limitations
     def refine_moveset_king
         king_borders
         check_friendly
-        check_castling
+        castling
         convert_to_squares
     end
 
@@ -19,7 +19,7 @@ module King_Limitations
         self.moves -= LOWER_LIMITATIONS if Table::BOTTOM_BORDER.include?(self.position)
     end
 
-    def check_castling
+    def castling
         if @turn.odd? && self.displaced == 0
             if @board[0].class.ancestors.include?(Piece)
                 self.moves += [-2] if @board[0].displaced == 0 && @board[1] == " " && @board[2] == " " && [1, 2, self.position].none? { | square | generate_threatened_squares(collect_set("black")).include?(square) }
@@ -265,10 +265,39 @@ module Moves
     end
 
     def move_piece(destination)
+        castling_move_tower(destination) if check_castling(destination)
         log_move(destination)
         self.board[self.position] = " "
         self.position = destination
         self.board[destination] = self
+    end
+
+    def check_castling(destination)
+        return true if self.class.name == "King" && [1, 5, 57, 61].include?(destination)
+    end
+
+    def castling_move_tower(destination)
+        if @turn.odd?
+            if destination == 1
+                rook = self.board[0]
+                self.board[2] = rook
+                self.board[0] = " "
+            elsif destination == 5
+                rook = self.board[7]
+                self.board[4] = rook
+                self.board[7] = " "
+            end
+        elsif !@turn.odd?
+            if destination == 57
+                rook = self.board[56]
+                self.board[58] = rook
+                self.board[56] = " "
+            elsif destination == 61
+                rook = self.board[63]
+                self.board[60] = rook
+                self.board[63] = " "
+            end
+        end
     end
 
     def log_move(destination)

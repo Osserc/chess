@@ -45,11 +45,14 @@ class Game
         @table.board[0] = Rook.new("Rw", 0, "white", @table.board, @table.move_history, @table.turn)
         @table.board[7] = Rook.new("Rw", 7, "white", @table.board, @table.move_history, @table.turn)
         rook = @table.board[0]
-        rook.displaced = 1
+        king = @table.board[3]
 
         @table.board[63] = Pawn.new("Pb", 63, "black", @table.board, @table.move_history, @table.turn)
 
         @table.prepare_turn
+        king.move_piece(1)
+        @table.display_board
+
         # loop do
         #     @table.prepare_turn
         # end
