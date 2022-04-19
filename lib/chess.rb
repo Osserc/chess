@@ -13,20 +13,40 @@ class Game
 
     def gameplay
 
-        @table.board[19] = King.new("Kw", 19, "white", @table.board, @table.move_history)
-        @table.board[63] = King.new("Kb", 63, "black", @table.board, @table.move_history)
-        @table.board[61] = Knight.new("Nw", 61, "white", @table.board, @table.move_history)
-        @table.board[51] = Rook.new("Kb", 51, "black", @table.board, @table.move_history)
-        bw = @table.board[19]
-        bk = @table.board[63]
-        rook = @table.board[51]
-        knight = @table.board[35]
-        bishop = @table.board[25]
-        queen = @table.board[30]
-        pawn = @table.board[10]
-        loop do
-            @table.prepare_turn
-        end
+        @table.board[24] = King.new("Kw", 24, "white", @table.board, @table.move_history)
+        @table.board[39] = King.new("Kb", 39, "black", @table.board, @table.move_history)
+        # @table.board[33] = Rook.new("Rw", 33, "white", @table.board, @table.move_history)
+        @table.board[31] = Rook.new("Rb", 31, "black", @table.board, @table.move_history)
+        # @table.board[25] = Pawn.new("Pw", 25, "white", @table.board, @table.move_history)
+        # @table.board[52] = Pawn.new("Pw", 52, "white", @table.board, @table.move_history)
+        # @table.board[54] = Pawn.new("Pw", 54, "white", @table.board, @table.move_history)
+        # @table.board[10] = Pawn.new("Pb", 10, "black", @table.board, @table.move_history)
+        # @table.board[19] = Pawn.new("Pb", 19, "black", @table.board, @table.move_history)
+        # @table.board[37] = Pawn.new("Pb", 37, "black", @table.board, @table.move_history)
+        @table.board[30] = Pawn.new("Pb", 30, "black", @table.board, @table.move_history)
+        @table.board[23] = Pawn.new("Pb", 23, "black", @table.board, @table.move_history)
+
+        white_king = @table.board[24]
+        white_pawn_one = @table.board[25]
+        white_pawn_two = @table.board[52]
+        white_pawn_three = @table.board[54]
+        white_rook = @table.board[33]
+        black_pawn_one = @table.board[10]
+        black_pawn_two = @table.board[19]
+        black_pawn_three = @table.board[37]
+        black_rook = @table.board[31]
+        black_king = @table.board[39]
+        # white_pawn_one.displaced = 1
+        # white_pawn_two.displaced = 1
+        # white_pawn_three.displaced = 1
+        # black_pawn_one.displaced = 1
+        # black_pawn_one.displaced = 1
+        # black_pawn_one.displaced = 1
+
+        @table.prepare_turn
+        # loop do
+        #     @table.prepare_turn
+        # end
 
 
     end

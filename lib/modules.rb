@@ -18,26 +18,6 @@ end
 
 module Check
 
-    # def generate_threats_white
-    #     white_threatened_squares = Array.new
-    #     @white.each do | piece |
-    #         piece.moves.flatten.each do | single_move |
-    #             white_threatened_squares << single_move
-    #         end
-    #     end
-    #     white_threatened_squares
-    # end
-
-    # def generate_threats_black
-    #     black_threatened_squares = Array.new
-    #     @black.each do | piece |
-    #         piece.moves.flatten.each do | single_move |
-    #             black_threatened_squares << single_move
-    #         end
-    #     end
-    #     black_threatened_squares
-    # end
-
     def generate_threatened_squares(set)
         threatened_squares = Array.new
         set.each do | piece |

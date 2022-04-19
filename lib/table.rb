@@ -97,6 +97,7 @@ class Table
         regenerate_moveset_all
         purge_illegal_moves
         possible_moves = count_moves
+        puts possible_moves
         if @turn.odd?
             puts "Game over" if in_check?(@black, "white") && possible_moves.empty?
             puts "Stalemate" if !in_check?(@black, "white") && possible_moves.empty?

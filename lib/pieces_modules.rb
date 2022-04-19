@@ -22,21 +22,46 @@ end
 
 module Queen_Limitations
 
+    UPPER_LIMITATIONS = [[-9], [-8], [-7]]
+    LEFT_LIMITATIONS = [[-9], [-1], [7]]
+    RIGHT_LIMITATIONS = [[-7], [1], [9]]
+    LOWER_LIMITATIONS = [[7], [8], [9]]
+
     def refine_moveset_queen
         self.moves.each { | direction | check_friendly(direction) }
+        queen_borders
         build_directions
         convert_to_squares
     end
 
+    def queen_borders
+        self.moves -= UPPER_LIMITATIONS if Table::TOP_BORDER.include?(self.position) 
+        self.moves -= LEFT_LIMITATIONS if Table::LEFT_BORDER.include?(self.position)
+        self.moves -= RIGHT_LIMITATIONS if Table::RIGHT_BORDER.include?(self.position)
+        self.moves -= LOWER_LIMITATIONS if Table::BOTTOM_BORDER.include?(self.position)
+    end
 
 end
 
 module Bishop_Limitations
 
+    UPPER_LIMITATIONS = [[-9], [-7]]
+    LEFT_LIMITATIONS = [[-9], [7]]
+    RIGHT_LIMITATIONS = [[-7], [9]]
+    LOWER_LIMITATIONS = [[7], [9]]
+
     def refine_moveset_bishop
         self.moves.each { | direction | check_friendly(direction) }
+        bishop_borders
         build_directions
         convert_to_squares
+    end
+
+    def bishop_borders
+        self.moves -= UPPER_LIMITATIONS if Table::TOP_BORDER.include?(self.position) 
+        self.moves -= LEFT_LIMITATIONS if Table::LEFT_BORDER.include?(self.position)
+        self.moves -= RIGHT_LIMITATIONS if Table::RIGHT_BORDER.include?(self.position)
+        self.moves -= LOWER_LIMITATIONS if Table::BOTTOM_BORDER.include?(self.position)
     end
 
 end
@@ -77,10 +102,23 @@ end
 
 module Rook_Limitations
 
+    UPPER_LIMITATIONS = [[-8]]
+    LEFT_LIMITATIONS = [[-1]]
+    RIGHT_LIMITATIONS = [[1]]
+    LOWER_LIMITATIONS = [[-8]]
+
     def refine_moveset_rook
         self.moves.each { | direction | check_friendly(direction) }
+        rook_borders
         build_directions
         convert_to_squares
+    end
+
+    def rook_borders
+        self.moves -= UPPER_LIMITATIONS if Table::TOP_BORDER.include?(self.position) 
+        self.moves -= LEFT_LIMITATIONS if Table::LEFT_BORDER.include?(self.position)
+        self.moves -= RIGHT_LIMITATIONS if Table::RIGHT_BORDER.include?(self.position)
+        self.moves -= LOWER_LIMITATIONS if Table::BOTTOM_BORDER.include?(self.position)
     end
 
 end
@@ -162,10 +200,14 @@ module Moves
         moves.compact!
     end
 
+    def special_borders
+
+    end
+
     def build_directions
         self.moves.each do | direction |
             unless direction.empty?
-                until Table::ALL_BORDERS.include?(self.position + direction.last) do
+                until direction_borders(direction) do
                     if self.board[self.position + direction.last].class.ancestors.include?(Piece)
                         if self.board[self.position + direction.last].color != self.color
                             break
@@ -181,6 +223,21 @@ module Moves
         end
     end
 
+    def direction_borders(direction)
+        case direction.first
+        when -8
+            Table::TOP_BORDER.include?(self.position + direction.last)
+        when 8
+            Table::BOTTOM_BORDER.include?(self.position + direction.last)
+        when -1
+            Table::LEFT_BORDER.include?(self.position + direction.last)
+        when 1
+            Table::RIGHT_BORDER.include?(self.position + direction.last)
+        else
+            Table::ALL_BORDERS.include?(self.position + direction.last)
+        end
+    end
+
     def convert_to_squares
         self.moves.flatten!
         self.moves.map! do | single_move |
@@ -188,22 +245,11 @@ module Moves
         end
     end
 
-    # def convert_to_squares(moves = self.moves)
-    #     moves.map! do | single_move |
-    #         single_move += @position
-    #     end
-    # end
-
     def move_piece(destination)
-        # return if !valid_move?
         log_move(destination)
         self.board[self.position] = " "
         self.position = destination
         self.board[destination] = self
-    end
-
-    def valid_move?(destination)
-        self.moves.flatten.include?(destination)
     end
 
     def log_move(destination)
