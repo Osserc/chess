@@ -29,10 +29,10 @@ module King_Limitations
             end
         elsif !@turn.odd? && self.displaced == 0
             if board[56].class.ancestors.include?(Piece)
-                self.moves += [-2] if @board[56].displaced == 0 && @board[57] == " " && @board[58] == " " && [57, 58, self.position].none? { | square | generate_threatened_squares(collect_set("black")).include?(square) }
+                self.moves += [-2] if @board[56].displaced == 0 && @board[57] == " " && @board[58] == " " && [57, 58, self.position].none? { | square | generate_threatened_squares(collect_set("white")).include?(square) }
             end
             if @board[63].class.ancestors.include?(Piece)
-                self.moves += [2] if @board[63].displaced == 0 && @board[60] == " " && @board[61] == " " && @board[62] = " " && [self.position, 60, 61].none? { | square | generate_threatened_squares(collect_set("black")).include?(square) }
+                self.moves += [2] if @board[63].displaced == 0 && @board[60] == " " && @board[61] == " " && @board[62] = " " && [self.position, 60, 61].none? { | square | generate_threatened_squares(collect_set("white")).include?(square) }
             end
         end
     end
@@ -154,7 +154,7 @@ module Pawn_Limitations
         pawn_borders
         check_friendly
         pawn_eating
-        en_passant unless @turn == 1
+        en_passant
         convert_to_squares
     end
 
