@@ -108,28 +108,6 @@ class Table
         end
     end
 
-    def check_endgame
-        if @turn.odd?
-            checkmate if in_check?(@black, "white") && count_moves.empty?
-            stalemate if !in_check?(@black, "white") && count_moves.empty?
-        else
-            checkmate if in_check?(@white, "black") && count_moves.empty?
-            stalemate if !in_check?(@white, "black") && count_moves.empty?
-        end
-    end
-
-    def checkmate
-        if @turn.odd?
-            puts "Checkmate. Black wins."
-        else
-            puts "Checkmate. White wins."
-        end
-    end
-
-    def stalemate
-        puts "Stalemate."
-    end
-
     def regenerate_moveset(set)
         set.each do | piece |
             piece.define_moveset

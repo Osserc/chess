@@ -76,6 +76,44 @@ module Navigation
         return true if LETTERS.include?(destination[0]) && NUMBERS.include?(destination[1].to_i) && piece.moves.include?(convert_front_to_back(destination))
     end
 
+    def validate_new_game(answer)
+        return true if  answer == "YES" || answer == "NO"
+    end
+
+    def checkmate
+        if @turn.odd?
+            puts "Checkmate. Black wins."
+            new_game(ask_player_game)
+        else
+            puts "Checkmate. White wins."
+            new_game(ask_player_game)
+        end
+    end
+
+    def stalemate
+        puts "Stalemate."
+        new_game(ask_player_game)
+    end
+
+    def ask_player_game
+        puts "Do you want to play again?"
+        answer = gets.chomp.upcase
+        until validate_new_game(answer) do
+            puts "Invalid input. Type either yes or no."
+            answer = gets.chomp.upcase
+        end
+        answer
+    end
+
+    def new_game(answer)
+        if answer == "YES"
+            Game.new.gameplay
+        else
+            puts "Thanks for playing."
+            exit
+        end
+    end
+
 end
 
 module Check
@@ -163,6 +201,16 @@ module Check
             end
         end
         possible_moves
+    end
+
+    def check_endgame
+        if @turn.odd?
+            checkmate if in_check?(@black, "white") && count_moves.empty?
+            stalemate if !in_check?(@black, "white") && count_moves.empty?
+        else
+            checkmate if in_check?(@white, "black") && count_moves.empty?
+            stalemate if !in_check?(@white, "black") && count_moves.empty?
+        end
     end
 
 end
