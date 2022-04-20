@@ -151,6 +151,7 @@ module Pawn_Limitations
         pawn_color_check
         pawn_double_step
         pawn_obstruction
+        pawn_borders
         check_friendly
         pawn_eating
         en_passant unless @turn == 1
@@ -169,9 +170,16 @@ module Pawn_Limitations
 
     def pawn_obstruction
         self.moves -= [16] if self.board[self.position + 16] != " "
-        self.moves -= [8] if self.board[self.position + 8] != " "
+        self.moves -= [8, 16] if self.board[self.position + 8] != " "
         self.moves -= [-16] if self.board[self.position - 16] != " "
-        self.moves -= [-8] if self.board[self.position - 8] != " "
+        self.moves -= [-8, -16] if self.board[self.position - 8] != " "
+    end
+
+    def pawn_borders
+        self.moves -= [7] if Table::LEFT_BORDER.include?(self.position) && self.color == "white"
+        self.moves -= [9] if Table::RIGHT_BORDER.include?(self.position) && self.color == "white"
+        self.moves -= [-9] if Table::LEFT_BORDER.include?(self.position) && self.color == "black"
+        self.moves -= [-7] if Table::RIGHT_BORDER.include?(self.position) && self.color == "black"
     end
 
     def pawn_eating

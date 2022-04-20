@@ -112,7 +112,7 @@ module Check
         threatened_squares.include?(king.position)
     end
 
-    def purge_illegal_moves
+    def generate_legal_moves
         if @turn.odd?
             active_pieces = collect_set("white")
             regenerate_moveset(active_pieces)

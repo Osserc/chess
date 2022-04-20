@@ -91,14 +91,12 @@ class Table
         destination = select_destination(piece)
         piece.move_piece(destination)
         check_promotion
-        @turn += 1
+        self.turn += 1
     end
 
     def prepare_turn
         display_board
-        # collect_pieces_all
-        # regenerate_moveset_all
-        purge_illegal_moves
+        generate_legal_moves
         check_endgame
     end
 
@@ -130,16 +128,6 @@ class Table
 
     def stalemate
         puts "Stalemate."
-    end
-
-    def collect_pieces_all
-        @white = collect_set("white")
-        @black = collect_set("black")
-    end
-
-    def regenerate_moveset_all
-        regenerate_moveset(@white)
-        regenerate_moveset(@black)
     end
 
     def regenerate_moveset(set)
