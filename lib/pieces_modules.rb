@@ -20,19 +20,19 @@ module King_Limitations
     end
 
     def castling
-        if @turn.odd? && self.displaced == 0
+        if self.color == "white" && self.displaced == 0
             if @board[0].class.ancestors.include?(Piece)
                 self.moves += [-2] if @board[0].displaced == 0 && @board[1] == " " && @board[2] == " " && [1, 2, self.position].none? { | square | generate_threatened_squares(collect_set("black")).include?(square) }
             end
             if @board[7].class.ancestors.include?(Piece)
                 self.moves += [2] if @board[7].displaced == 0 && @board[4] == " " && @board[5] == " " && @board[6] == " " && [self.position, 4, 5].none? { | square | generate_threatened_squares(collect_set("black")).include?(square) }
             end
-        elsif !@turn.odd? && self.displaced == 0
+        elsif self.color == "black" && self.displaced == 0
             if board[56].class.ancestors.include?(Piece)
                 self.moves += [-2] if @board[56].displaced == 0 && @board[57] == " " && @board[58] == " " && [57, 58, self.position].none? { | square | generate_threatened_squares(collect_set("white")).include?(square) }
             end
             if @board[63].class.ancestors.include?(Piece)
-                self.moves += [2] if @board[63].displaced == 0 && @board[60] == " " && @board[61] == " " && @board[62] = " " && [self.position, 60, 61].none? { | square | generate_threatened_squares(collect_set("white")).include?(square) }
+                self.moves += [2] if @board[63].displaced == 0 && @board[60] == " " && @board[61] == " " && @board[62] == " " && [self.position, 60, 61].none? { | square | generate_threatened_squares(collect_set("white")).include?(square) }
             end
         end
     end
@@ -190,13 +190,13 @@ module Pawn_Limitations
     end
 
     def en_passant
-        if !move_history.find_last.value.nil? && @turn.odd?
+        if !move_history.find_last.value.nil? && self.color == "white"
             pawn = @move_history.find_last.value[:moved_piece]
             if pawn.class.name == "Pawn" && pawn.displaced == 1
                 self.moves += [7] if @board[self.position - 1] == pawn
                 self.moves += [9] if @board[self.position + 1] == pawn
             end
-        elsif !move_history.find_last.value.nil? && !@turn.odd?
+        elsif !move_history.find_last.value.nil? && self.color == "black"
             pawn = @move_history.find_last.value[:moved_piece]
             if pawn.class.name == "Pawn" && pawn.displaced == 1
                 self.moves += [-9] if @board[self.position - 1] == pawn
@@ -296,11 +296,11 @@ module Moves
     end
 
     def check_castling(destination)
-        return true if self.class.name == "King" && [1, 5, 57, 61].include?(destination)
+        return true if self.class.name == "King" && [1, 5, 57, 61].include?(destination) && self.displaced == 0
     end
 
     def castling_move_tower(destination)
-        if @turn.odd?
+        if self.color == "white"
             if destination == 1
                 rook = self.board[0]
                 rook.position = 2
@@ -312,7 +312,7 @@ module Moves
                 self.board[4] = rook
                 self.board[7] = " "
             end
-        elsif !@turn.odd?
+        elsif self.color == "black"
             if destination == 57
                 rook.position = 58
                 rook = self.board[56]
