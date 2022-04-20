@@ -4,7 +4,7 @@ require_relative "history"
 class Table
     attr_accessor :board, :white, :black, :move_history, :turn
 
-    include Navigation, Check
+    include Navigation, Check, SaveLoad
 
     TOP_BORDER = (0..7).to_a
     LEFT_BORDER = [0, 8, 16, 24, 32, 40, 48, 56]
@@ -87,7 +87,7 @@ class Table
     def play_round
         prepare_turn
         presentation
-        piece = select_piece
+        piece = selection_loop
         destination = select_destination(piece)
         piece.move_piece(destination)
         check_promotion

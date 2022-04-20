@@ -14,8 +14,17 @@ module Navigation
         converted
     end
 
+    def selection_loop
+        piece = select_piece
+        until !piece.nil? do
+            prepare_turn
+            presentation
+            piece = select_piece
+        end
+        piece
+    end
+
     def select_piece
-        a = @board
         puts "Select the piece you want to move."
         answer = gets.chomp.upcase
         until validate_input(answer) do
@@ -26,17 +35,19 @@ module Navigation
     end
 
     def validate_input(answer)
-        return true if (LETTERS.include?(answer[0]) && NUMBERS.include?(answer[1].to_i)) || answer == "SAVE" || answer == "LOAD"
+        return true if (LETTERS.include?(answer[0]) && NUMBERS.include?(answer[1].to_i) && answer.length == 2) || answer == "SAVE" || answer == "LOAD"
     end
 
     def action(answer)
         case answer
         when "SAVE"
             puts "How do you want to call your save?"
-            save_functionality(gets.chomp)
+            save_game
+            return nil
         when "LOAD"
             puts "Which savegame do you want to load?"
-            load_functionality(gets.chomp)
+            load_game
+            return nil
         else
             coord = convert_front_to_back(answer)
             piece = check_piece(coord)
@@ -62,7 +73,6 @@ module Navigation
     end
 
     def select_destination(piece)
-        a = @board
         puts "Select the square where you want your piece to move."
         destination = gets.chomp.upcase
         until validate_destination(piece, destination) do
@@ -73,7 +83,7 @@ module Navigation
     end
 
     def validate_destination(piece, destination)
-        return true if LETTERS.include?(destination[0]) && NUMBERS.include?(destination[1].to_i) && piece.moves.include?(convert_front_to_back(destination))
+        return true if LETTERS.include?(destination[0]) && NUMBERS.include?(destination[1].to_i) && destination.length == 2 && piece.moves.include?(convert_front_to_back(destination))
     end
 
     def validate_new_game(answer)
@@ -205,11 +215,11 @@ module Check
 
     def check_endgame
         if @turn.odd?
-            checkmate if in_check?(@black, "white") && count_moves.empty?
-            stalemate if !in_check?(@black, "white") && count_moves.empty?
+            checkmate if in_check?(collect_set("black"), "white") && count_moves.empty?
+            stalemate if !in_check?(collect_set("black"), "white") && count_moves.empty?
         else
-            checkmate if in_check?(@white, "black") && count_moves.empty?
-            stalemate if !in_check?(@white, "black") && count_moves.empty?
+            checkmate if in_check?(collect_set("white"), "black") && count_moves.empty?
+            stalemate if !in_check?(collect_set("white"), "black") && count_moves.empty?
         end
     end
 

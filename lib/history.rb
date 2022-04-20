@@ -1,3 +1,43 @@
+module SaveLoad
+
+    def save_game
+        puts "\nWhich name would you like to assign to your savegame?"
+        file = gets.chomp
+        dirname = "savegames"
+        Dir.mkdir(dirname) unless File.exists?(dirname)
+        File.open("#{dirname}/#{file}.txt", 'w'){ | f | f.write(Marshal.dump(self)) }
+        puts "\nYour game has been saved."
+    end
+
+    def load_game
+        puts "\nWhich game would you like to load?"
+        unless File.exists?("savegames")
+            puts "There are no saved game states."
+            return
+        end
+        display_savegames
+        file = load_loop
+        state_to_restore = File.open("savegames/#{file}.txt", "r") { | f | Marshal.load(f) }
+        @board = state_to_restore.board
+        @turn = state_to_restore.turn
+        @move_history = state_to_restore.move_history
+    end
+
+    def display_savegames
+        puts Dir.glob("savegames/*").map {| element | element.delete_prefix("savegames/").delete_suffix(".txt")}.join("\n")
+    end
+
+    def load_loop
+        file = gets.chomp
+        until Dir.glob("savegames/*").map {| element | element.delete_prefix("savegames/").delete_suffix(".txt")}.include?(file) do
+            puts "\nThat\'s not a valid savegame. You have to match one from memory."
+            file = gets.chomp
+        end
+        file
+    end
+
+end
+
 class MoveHistory
     attr_reader :head, :tail
     def initialize(head = nil, tail = nil)
