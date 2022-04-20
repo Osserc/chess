@@ -343,8 +343,8 @@ module Moves
     end
 
     def en_passant_remove_pawn(destination)
-        @board[destination - 8] = " " if @turn.odd?
-        @board[destination + 8] = " " if !@turn.odd?
+        @board[destination - 8] = " " if self.color == "white"
+        @board[destination + 8] = " " if self.color == "black"
     end
 
     def log_move(destination)
