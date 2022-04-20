@@ -116,7 +116,7 @@ class Table
     end
 
     def revert_move
-        move = PastMoves.move_history.find_last.value
+        move = PastMoves.move_history.tail.value
         piece_to_move_back = move[:moved_piece]
         piece_to_move_back.displaced -= 1
         distance_traveled = move[:distance_traveled]

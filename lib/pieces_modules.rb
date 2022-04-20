@@ -190,14 +190,14 @@ module Pawn_Limitations
     end
 
     def en_passant
-        if !PastMoves.move_history.find_last.value.nil? && self.color == "white"
-            pawn = PastMoves.move_history.find_last.value[:moved_piece]
+        if !PastMoves.move_history.tail.value.nil? && self.color == "white"
+            pawn = PastMoves.move_history.tail.value[:moved_piece]
             if pawn.class.name == "Pawn" && pawn.displaced == 1
                 self.moves += [7] if @board[self.position - 1] == pawn
                 self.moves += [9] if @board[self.position + 1] == pawn
             end
-        elsif PastMoves.move_history.find_last.value.nil? && self.color == "black"
-            pawn = PastMoves.move_history.find_last.value[:moved_piece]
+        elsif !PastMoves.move_history.tail.value.nil? && self.color == "black"
+            pawn = PastMoves.move_history.tail.value[:moved_piece]
             if pawn.class.name == "Pawn" && pawn.displaced == 1
                 self.moves += [-9] if @board[self.position - 1] == pawn
                 self.moves += [-7] if @board[self.position + 1] == pawn
@@ -364,7 +364,7 @@ module Moves
 
         if check_en_passant(destination)
             move[:en_passant] = {
-                :pawn => PastMoves.move_history.find_last.value[:moved_piece]
+                :pawn => PastMoves.move_history.tail.value[:moved_piece]
             }
         end
 

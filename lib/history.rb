@@ -5,7 +5,10 @@ module SaveLoad
         file = gets.chomp
         dirname = "savegames"
         Dir.mkdir(dirname) unless File.exists?(dirname)
-        File.open("#{dirname}/#{file}.txt", 'w'){ | f | f.write(Marshal.dump(self)) }
+        info = [Marshal.dump(self), Marshal.dump(PastMoves.move_history)]
+        File.open("#{dirname}/#{file}.txt", 'w') do | file |
+            file.puts(Marshal.dump(info))
+        end
         puts "\nYour game has been saved."
     end
 
@@ -17,10 +20,12 @@ module SaveLoad
         end
         display_savegames
         file = load_loop
-        state_to_restore = File.open("savegames/#{file}.txt", "r") { | f | Marshal.load(f) }
-        @board = state_to_restore.board
-        @turn = state_to_restore.turn
-        # @move_history = state_to_restore.move_history
+        info = File.open("savegames/#{file}.txt", "r") { | file | Marshal.load(file) }
+        table = Marshal.load(info[0])
+        past = Marshal.load(info[1])
+        @board = table.board
+        @turn = table.turn
+        PastMoves.move_history = past
     end
 
     def display_savegames
