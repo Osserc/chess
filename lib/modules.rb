@@ -27,6 +27,7 @@ module Navigation
     def select_piece
         puts "Select the piece you want to move."
         answer = gets.chomp.upcase
+        a = PastMoves.move_history
         until validate_input(answer) do
             puts "Invalid input."
             answer = gets.chomp.upcase

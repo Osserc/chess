@@ -20,7 +20,7 @@ module SaveLoad
         state_to_restore = File.open("savegames/#{file}.txt", "r") { | f | Marshal.load(f) }
         @board = state_to_restore.board
         @turn = state_to_restore.turn
-        @move_history = state_to_restore.move_history
+        # @move_history = state_to_restore.move_history
     end
 
     def display_savegames
@@ -94,4 +94,14 @@ class Node
         @value = value
         @next_node = next_node
     end
+end
+
+module PastMoves
+
+    class << self
+        attr_accessor :move_history
+    end
+
+    self.move_history = MoveHistory.new
+
 end

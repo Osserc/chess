@@ -1,20 +1,18 @@
 require_relative "pieces_modules"
 
 class Piece
-    attr_accessor :position, :board, :moves, :displaced, :move_history
+    attr_accessor :position, :board, :moves, :displaced
     attr_reader :symbol, :color
 
-    include Moves, Navigation
+    include Moves, Navigation, PastMoves
 
-    def initialize(symbol = nil, position = nil, color = nil, board, move_history, turn)
+    def initialize(symbol = nil, position = nil, color = nil, board)
         @symbol = symbol
         @position = position
         @color = color
         @board = board
         @displaced = 0
         @moves = Array.new
-        @move_history = move_history
-        @turn = turn
     end
 end
 
