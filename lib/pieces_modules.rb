@@ -21,18 +21,18 @@ module King_Limitations
 
     def castling
         if self.color == "white" && self.displaced == 0
-            if @board[0].class.ancestors.include?(Piece)
-                self.moves += [-2] if @board[0].displaced == 0 && @board[1] == " " && @board[2] == " " && [1, 2, self.position].none? { | square | generate_threatened_squares(collect_set("black")).include?(square) }
+            if BoardState.board[0].class.ancestors.include?(Piece)
+                self.moves += [-2] if BoardState.board[0].displaced == 0 && BoardState.board[1] == " " && BoardState.board[2] == " " && [1, 2, self.position].none? { | square | generate_threatened_squares(collect_set("black")).include?(square) }
             end
-            if @board[7].class.ancestors.include?(Piece)
-                self.moves += [2] if @board[7].displaced == 0 && @board[4] == " " && @board[5] == " " && @board[6] == " " && [self.position, 4, 5].none? { | square | generate_threatened_squares(collect_set("black")).include?(square) }
+            if BoardState.board[7].class.ancestors.include?(Piece)
+                self.moves += [2] if BoardState.board[7].displaced == 0 && BoardState.board[4] == " " && BoardState.board[5] == " " && BoardState.board[6] == " " && [self.position, 4, 5].none? { | square | generate_threatened_squares(collect_set("black")).include?(square) }
             end
         elsif self.color == "black" && self.displaced == 0
-            if board[56].class.ancestors.include?(Piece)
-                self.moves += [-2] if @board[56].displaced == 0 && @board[57] == " " && @board[58] == " " && [57, 58, self.position].none? { | square | generate_threatened_squares(collect_set("white")).include?(square) }
+            if BoardState.board[56].class.ancestors.include?(Piece)
+                self.moves += [-2] if BoardState.board[56].displaced == 0 && BoardState.board[57] == " " && BoardState.board[58] == " " && [57, 58, self.position].none? { | square | generate_threatened_squares(collect_set("white")).include?(square) }
             end
-            if @board[63].class.ancestors.include?(Piece)
-                self.moves += [2] if @board[63].displaced == 0 && @board[60] == " " && @board[61] == " " && @board[62] == " " && [self.position, 60, 61].none? { | square | generate_threatened_squares(collect_set("white")).include?(square) }
+            if BoardState.board[63].class.ancestors.include?(Piece)
+                self.moves += [2] if BoardState.board[63].displaced == 0 && BoardState.board[60] == " " && BoardState.board[61] == " " && BoardState.board[62] == " " && [self.position, 60, 61].none? { | square | generate_threatened_squares(collect_set("white")).include?(square) }
             end
         end
     end
@@ -169,10 +169,10 @@ module Pawn_Limitations
     end
 
     def pawn_obstruction
-        self.moves -= [16] if self.board[self.position + 16] != " "
-        self.moves -= [8, 16] if self.board[self.position + 8] != " "
-        self.moves -= [-16] if self.board[self.position - 16] != " "
-        self.moves -= [-8, -16] if self.board[self.position - 8] != " "
+        self.moves -= [16] if BoardState.board[self.position + 16] != " "
+        self.moves -= [8, 16] if BoardState.board[self.position + 8] != " "
+        self.moves -= [-16] if BoardState.board[self.position - 16] != " "
+        self.moves -= [-8, -16] if BoardState.board[self.position - 8] != " "
     end
 
     def pawn_borders
@@ -183,24 +183,24 @@ module Pawn_Limitations
     end
 
     def pawn_eating
-        self.moves -= [7] if self.board[self.position + 7] == " "
-        self.moves -= [9] if self.board[self.position + 9] == " "
-        self.moves -= [-7] if self.board[self.position - 7] == " "
-        self.moves -= [-9] if self.board[self.position - 9] == " "
+        self.moves -= [7] if BoardState.board[self.position + 7] == " "
+        self.moves -= [9] if BoardState.board[self.position + 9] == " "
+        self.moves -= [-7] if BoardState.board[self.position - 7] == " "
+        self.moves -= [-9] if BoardState.board[self.position - 9] == " "
     end
 
     def en_passant
         if !PastMoves.move_history.tail.value.nil? && self.color == "white"
             pawn = PastMoves.move_history.tail.value[:moved_piece]
             if pawn.class.name == "Pawn" && pawn.displaced == 1
-                self.moves += [7] if @board[self.position - 1] == pawn
-                self.moves += [9] if @board[self.position + 1] == pawn
+                self.moves += [7] if BoardState.board[self.position - 1] == pawn
+                self.moves += [9] if BoardState.board[self.position + 1] == pawn
             end
         elsif !PastMoves.move_history.tail.value.nil? && self.color == "black"
             pawn = PastMoves.move_history.tail.value[:moved_piece]
             if pawn.class.name == "Pawn" && pawn.displaced == 1
-                self.moves += [-9] if @board[self.position - 1] == pawn
-                self.moves += [-7] if @board[self.position + 1] == pawn
+                self.moves += [-9] if BoardState.board[self.position - 1] == pawn
+                self.moves += [-7] if BoardState.board[self.position + 1] == pawn
             end
         end
     end
@@ -236,8 +236,8 @@ module Moves
 
     def check_friendly(moves = self.moves)
         moves.map! do | single_move |
-            if self.board[self.position + single_move].class.ancestors.include?(Piece)
-                single_move = nil if self.board[self.position + single_move].color == self.color
+            if BoardState.board[self.position + single_move].class.ancestors.include?(Piece)
+                single_move = nil if BoardState.board[self.position + single_move].color == self.color
             end
             single_move
         end
@@ -248,10 +248,10 @@ module Moves
         self.moves.each do | direction |
             unless direction.empty?
                 until direction_borders(direction) do
-                    if self.board[self.position + direction.last].class.ancestors.include?(Piece)
-                        if self.board[self.position + direction.last].color != self.color
+                    if BoardState.board[self.position + direction.last].class.ancestors.include?(Piece)
+                        if BoardState.board[self.position + direction.last].color != self.color
                             break
-                        elsif self.board[self.position + direction.last].color == self.color
+                        elsif BoardState.board[self.position + direction.last].color == self.color
                             direction.pop
                             break
                         end
@@ -289,9 +289,9 @@ module Moves
         castling_move_tower(destination) if check_castling(destination)
         log_move(destination)
         en_passant_remove_pawn(destination) if check_en_passant(destination)
-        self.board[self.position] = " "
+        BoardState.board[self.position] = " "
         self.position = destination
-        self.board[destination] = self
+        BoardState.board[destination] = self
         self.displaced += 1
     end
 
@@ -302,40 +302,40 @@ module Moves
     def castling_move_tower(destination)
         if self.color == "white"
             if destination == 1
-                rook = self.board[0]
+                rook = BoardState.board[0]
                 rook.position = 2
-                self.board[2] = rook
-                self.board[0] = " "
+                BoardState.board[2] = rook
+                BoardState.board[0] = " "
             elsif destination == 5
-                rook = self.board[7]
+                rook = BoardState.board[7]
                 rook.position = 4
-                self.board[4] = rook
-                self.board[7] = " "
+                BoardState.board[4] = rook
+                BoardState.board[7] = " "
             end
         elsif self.color == "black"
             if destination == 57
                 rook.position = 58
-                rook = self.board[56]
-                self.board[58] = rook
-                self.board[56] = " "
+                rook = BoardState.board[56]
+                BoardState.board[58] = rook
+                BoardState.board[56] = " "
             elsif destination == 61
-                rook = self.board[63]
+                rook = BoardState.board[63]
                 rook.position = 60
-                self.board[60] = rook
-                self.board[63] = " "
+                BoardState.board[60] = rook
+                BoardState.board[63] = " "
             end
         end
     end
 
     def discover_castling(destination)
-        return @board[2], 2 if destination == 1
-        return @board[4], -3 if destination == 5
-        return @board[58], 2 if destination == 57
-        return @board[60], -3 if destination == 61
+        return BoardState.board[2], 2 if destination == 1
+        return BoardState.board[4], -3 if destination == 5
+        return BoardState.board[58], 2 if destination == 57
+        return BoardState.board[60], -3 if destination == 61
     end
 
     def check_en_passant(destination)
-        if self.class.name == "Pawn" && @board[destination] == " " && [-8, 8].any? { | single_move | @board[destination + single_move].class.name == "Pawn" } && (destination % 8 != self.position % 8)
+        if self.class.name == "Pawn" && BoardState.board[destination] == " " && [-8, 8].any? { | single_move | BoardState.board[destination + single_move].class.name == "Pawn" } && (destination % 8 != self.position % 8)
             return true
         else
             return false
@@ -343,8 +343,8 @@ module Moves
     end
 
     def en_passant_remove_pawn(destination)
-        @board[destination - 8] = " " if self.color == "white"
-        @board[destination + 8] = " " if self.color == "black"
+        BoardState.board[destination - 8] = " " if self.color == "white"
+        BoardState.board[destination + 8] = " " if self.color == "black"
     end
 
     def log_move(destination)
@@ -353,7 +353,7 @@ module Moves
             :distance_traveled => destination - self.position,
         }
 
-        self.board[destination] == " " ? move[:eaten_piece] = nil : move[:eaten_piece] = self.board[destination]
+        BoardState.board[destination] == " " ? move[:eaten_piece] = nil : move[:eaten_piece] = BoardState.board[destination]
 
         if check_castling(destination)
             move[:castled] = {

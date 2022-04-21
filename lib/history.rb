@@ -23,8 +23,8 @@ module SaveLoad
         info = File.open("savegames/#{file}.txt", "r") { | file | Marshal.load(file) }
         table = Marshal.load(info[0])
         past = Marshal.load(info[1])
-        @board = table.board
-        @turn = table.turn
+        # @board = table.board
+        # @turn = table.turn
         PastMoves.move_history = past
     end
 

@@ -56,13 +56,13 @@ module Navigation
     end
 
     def check_piece(coord)
-        if @board[coord].class.ancestors.include?(Piece)
+        if BoardState.board[coord].class.ancestors.include?(Piece)
             if @turn.odd?
-                return @board[coord] if @board[coord].color == "white" && !@board[coord].moves.empty?
+                return BoardState.board[coord] if BoardState.board[coord].color == "white" && !BoardState.board[coord].moves.empty?
                 puts "Invalid coordinates."
                 select_piece
             else
-                return @board[coord] if @board[coord].color == "black" && !@board[coord].moves.empty?
+                return BoardState.board[coord] if BoardState.board[coord].color == "black" && !BoardState.board[coord].moves.empty?
                 puts "Invalid coordinates."
                 select_piece
             end
@@ -139,14 +139,14 @@ module Check
     end
 
     def find_king(color)
-        @board.each do | piece |
+        BoardState.board.each do | piece |
             return piece if piece.class.name == "King" && piece.color == color
         end
     end
 
     def collect_set(color)
         set = Array.new
-        @board.each do | square |
+        BoardState.board.each do | square |
             if square.class.ancestors.include?(Piece)
                 set << square if square.color == color
             end
@@ -222,5 +222,72 @@ module Check
             stalemate if !in_check?(collect_set("white"), "black") && count_moves.empty?
         end
     end
+
+end
+
+module BoardState
+
+    class << self
+        attr_accessor :board
+
+        def make_board
+            Array.new(64, " ")
+        end
+
+        def display_board
+            i = 0
+            b = 0
+            print "   | " + Navigation::NUMBERS.join(" | ").to_s + " |\n"
+            print "---+---+---+---+---+---+---+---+---+\n"
+            until i == 8 && b == 64
+                print " " + Navigation::LETTERS[i] + " | " + BoardState.board.slice(b, 8).map { | element | element.class.ancestors.include?(Piece) ? element.symbol : element }.join(" | ").to_s + " |\n"
+                print "---+---+---+---+---+---+---+---+---+\n"
+                i += 1
+                b += 8
+            end
+        end
+
+        def populate_board(white, black)
+            white.each do | element |
+                BoardState.board[element.position] = element
+            end
+            black.each do | element |
+                BoardState.board[element.position] = element
+            end
+        end
+
+        def prepare_pieces
+            white = Array.new
+            black = Array.new
+    
+            white << King.new("♚", 3, "white")
+            white << Queen.new("♛", 4, "white")
+            white << Bishop.new("♝", 2, "white")
+            white << Bishop.new("♝", 5, "white")
+            white << Knight.new("♞", 1, "white")
+            white << Knight.new("♞", 6, "white")
+            white << Rook.new("♜", 0, "white")
+            white << Rook.new("♜", 7, "white")
+            (8..15).to_a.each do | square |
+                white << Pawn.new("♟", square, "white")
+            end
+    
+            black << King.new("♔", 59, "black")
+            black << Queen.new("♕", 60, "black")
+            black << Bishop.new("♗", 58, "black")
+            black << Bishop.new("♗", 61, "black")
+            black << Knight.new("♘", 57, "black")
+            black << Knight.new("♘", 62, "black")
+            black << Rook.new("♖", 56, "black")
+            black << Rook.new("♖", 63, "black")
+            (48..55).to_a.each do | square |
+                black << Pawn.new("♙", square, "black")
+            end
+    
+            return white, black
+        end
+    end
+
+    self.board = make_board
 
 end
