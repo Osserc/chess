@@ -41,39 +41,6 @@ class Table
         end
     end
 
-    def regenerate_moveset(set)
-        set.each do | piece |
-            piece.define_moveset
-        end
-    end
-
-    def revert_move
-        move = PastMoves.move_history.tail.value
-        piece_to_move_back = move[:moved_piece]
-        piece_to_move_back.displaced -= 1
-        distance_traveled = move[:distance_traveled]
-        piece_to_resurrect = move[:eaten_piece]
-        piece_to_resurrect.nil? ? BoardState.board[piece_to_move_back.position] = " " : BoardState.board[piece_to_move_back.position] = piece_to_resurrect
-        piece_to_move_back.position -= distance_traveled
-        BoardState.board[piece_to_move_back.position] = piece_to_move_back
-        revert_move_castling(move) if move.key?(:castled)
-        revert_move_en_passant(move) if move.key?(:en_passant)
-        PastMoves.move_history.pop
-    end
-
-    def revert_move_castling(move)
-        rook = move[:castled][:rook]
-        distance = move[:castled][:distance]
-        BoardState.board[rook.position] = " "
-        rook.position -= distance
-        BoardState.board[rook.position] = rook
-    end
-
-    def revert_move_en_passant(move)
-        pawn = move[:en_passant][:pawn]
-        BoardState.board[pawn.position] = pawn
-    end
-
     def check_promotion
         pawn = find_promotable_pawn
         if !pawn.nil?
