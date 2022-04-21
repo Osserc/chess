@@ -12,6 +12,8 @@ To accomplish this I had to familiarize myself with module variables, which was 
 
 While this made my code significantly cleaner, there are still many optimizations to be made, like cleaning up the Table class and the check module, but I decided to move forward with TOP instead of focusing too much on refactoring.
 
+A further hiccup was encountered when implementing a saving and loading functionality. When I had all the relevant variables packed in a single class it was a matter of dumping the instance into a file, but separating them proved to be a bit tricky. I think my solution is somewhat hacky, but it sufficed.
+
 All in all, it was an extremely fun and engaging project: coming up with ways to make all the pieces able to understand where to go was very stimulating and pushed me to my limits.
 
-Live preview: 
+Live preview: https://replit.com/@Osserc/chess#.replit
