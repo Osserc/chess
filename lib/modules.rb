@@ -103,6 +103,10 @@ module Navigation
         new_game(ask_player_game)
     end
 
+    def checked
+        puts "Your king in check."
+    end
+
     def ask_player_game
         puts "Do you want to play again?"
         answer = gets.chomp.upcase
@@ -247,9 +251,11 @@ module Check
     def check_endgame
         if @turn.odd?
             checkmate if in_check?(collect_set("black"), "white") && count_moves.empty?
+            checked if in_check?(collect_set("black"), "white") && !count_moves.empty?
             stalemate if !in_check?(collect_set("black"), "white") && count_moves.empty?
         else
             checkmate if in_check?(collect_set("white"), "black") && count_moves.empty?
+            checked if in_check?(collect_set("white"), "black") && !count_moves.empty?
             stalemate if !in_check?(collect_set("white"), "black") && count_moves.empty?
         end
     end
