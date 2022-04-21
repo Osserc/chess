@@ -41,11 +41,9 @@ module Navigation
     def action(answer)
         case answer
         when "SAVE"
-            puts "How do you want to call your save?"
             save_game
             return nil
         when "LOAD"
-            puts "Which savegame do you want to load?"
             load_game
             return nil
         else

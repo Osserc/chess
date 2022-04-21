@@ -1,30 +1,29 @@
 module SaveLoad
 
     def save_game
-        puts "\nWhich name would you like to assign to your savegame?"
+        puts "Which name would you like to assign to your savegame?"
         file = gets.chomp
         dirname = "savegames"
         Dir.mkdir(dirname) unless File.exists?(dirname)
-        info = [Marshal.dump(self), Marshal.dump(PastMoves.move_history)]
+        data = [BoardState.board, @turn, PastMoves.move_history]
         File.open("#{dirname}/#{file}.txt", 'w') do | file |
-            file.puts(Marshal.dump(info))
+            file.puts(Marshal.dump(data))
         end
-        puts "\nYour game has been saved."
+        puts "Your game has been saved."
     end
 
     def load_game
-        puts "\nWhich game would you like to load?"
+        puts "Which game would you like to load?"
         unless File.exists?("savegames")
             puts "There are no saved game states."
             return
         end
         display_savegames
         file = load_loop
-        info = File.open("savegames/#{file}.txt", "r") { | file | Marshal.load(file) }
-        table = Marshal.load(info[0])
-        past = Marshal.load(info[1])
-        # @board = table.board
-        # @turn = table.turn
+        data = File.open("savegames/#{file}.txt", "r") { | file | Marshal.load(file) }
+        board, turn, past = data
+        BoardState.board = board
+        @turn = turn
         PastMoves.move_history = past
     end
 
